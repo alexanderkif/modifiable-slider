@@ -2,19 +2,21 @@
 include /sliders/sliders
 
 - var dataJson = require('./data.json');
+- var page= 'Sliderm3'
 
 html
-  head
-    meta(charset='UTF-8')
-    title flatUI
-    link(href="img/favicon.ico" rel="icon" type="image/x-icon")
-    link(href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet")
-    link(href="https://unpkg.com/ionicons@4.3.0/dist/css/ionicons.min.css" rel="stylesheet")
-    link(rel="stylesheet" href="style.css")
-    
-  body
-    //- +flatUI(dataJson)
-    +sliders(dataJson.sliders)
+    head
+        meta(charset='UTF-8')
+        title= page
+        link(href="img/favicon.ico" rel="icon" type="image/x-icon")
+        link(href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet")
+        link(href="https://unpkg.com/ionicons@4.3.0/dist/css/ionicons.min.css" rel="stylesheet")
+        link(rel="stylesheet" href="style.css")
+        
+    body
+        .sliderm3page
+            .sliderm3page__header= page
+        +sliders(dataJson.sliders)
 
     script(src="https://code.jquery.com/jquery-1.12.4.js")
     script(src="https://code.jquery.com/ui/1.12.1/jquery-ui.js")

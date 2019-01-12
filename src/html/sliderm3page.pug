@@ -2,7 +2,7 @@ include ../components/sliderm3/sliderm3
 include ../components/tick/tick
 include ../chooseColor/chooseColor
 
-- var page= 'Sliderm3 page'
+- var page= 'Sliderm3 constructor'
 
 html
     head
@@ -15,7 +15,7 @@ html
         
     body
         .sliderm3page
-            .sliderm3page__header sliderm3
+            .sliderm3page__header= page
             .sliderm3page__content
                 .sliderm3page__slider.sliderm3page__slider_1st
                     //- sliderm3(min, max, value1, value2, step, intervals, hint, scale, interval, vertical,  

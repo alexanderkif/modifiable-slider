@@ -65,7 +65,7 @@ class Sliderm3pageContent {
         this.sliderm3Div.dataset.colorScale = this.chooseColor2color(this.chooseColorScaleDiv);	
         this.sliderm3Div.dataset.colorText = this.chooseColor2color(this.chooseColorTextDiv);
         this.sliderm3Div.dispatchEvent(new Event('draw'));	
-        this.inputSlidermResultDiv.innerHTML = `${this.sliderm3Div.outerHTML.split('>')[0]}></div>`;
+        this.inputSlidermResultDiv.innerHTML = `${this.sliderm3Div.outerHTML.split('>')[0]}></div><script src="sliderm3.js"></script>`;
     };	
 
     @bind
@@ -95,7 +95,7 @@ class Sliderm3pageContent {
         this.sliderm3Div.dataset.max = this.inputSlidermMaxDiv.value;	
         this.sliderm3Div.dataset.step = this.inputSlidermStepDiv.value;	
         this.sliderm3Div.dataset.intervals = this.inputSlidermIntervalsDiv.value;
-        this.inputSlidermResultDiv.innerHTML = `${this.sliderm3Div.outerHTML.split('>')[0]}></div>`;
+        this.inputSlidermResultDiv.innerHTML = `${this.sliderm3Div.outerHTML.split('>')[0]}></div><script src="sliderm3.js"></script>`;
     };
 
     @bind
