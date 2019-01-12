@@ -1,0 +1,58 @@
+include ../components/sliderm3/sliderm3
+- var itemStyle = "flex: 1;"
+
+mixin chooseColor(r, g, b, o, pr, pg, pb, po)
+    .chooseColor(style='width: 100%; display: flex; flex-wrap: nowrap; justify-content: space-around; user-select: none;')
+        .chooseColor__item(style=itemStyle)
+            header Line color
+            //- sliderm3(min, max, value1, value2, step, intervals, hint, scale, interval, vertical,  
+            //-     verticalSize, lineHeight, pointSize, colorLine, colorPoint, colorScale, colorText) rgb(250, 235, 215, 0.5)
+            .chooseColor__wrapper(style="padding:5px")
+                +sliderm3(0, 255, 0, 230, 1, 1, '', '', '', '', 222, 4, 10, '#e6e6e6', 'red', 'red', 'lightgrey', 'white')
+            .chooseColor__wrapper(style="padding:5px")
+                +sliderm3(0, 255, 0, 230, 1, 1, '', '', '', '', 222, 4, 10, '#e6e6e6', 'green', 'green', 'lightgrey', 'white')
+            .chooseColor__wrapper(style="padding:5px")
+                +sliderm3(0, 255, 0, 230, 1, 1, '', '', '', '', 222, 4, 10, '#e6e6e6', 'blue', 'blue', 'lightgrey', 'white')
+            .chooseColor__wrapper(style="padding:5px")
+                +sliderm3(0, 255, 0, 255, 1, 1, '', '', '', '', 222, 4, 10, '#e6e6e6', 'lightgrey', 'lightgrey', 'lightgrey', 'white')
+        .chooseColor__item(style=itemStyle)
+            header Range color
+            .chooseColor__wrapper(style="padding:5px")
+                +sliderm3(0, 255, 0, r, 1, 1, '', '', '', '', 222, 4, 10, '#e6e6e6', 'red', 'red', 'lightgrey', 'white')
+            .chooseColor__wrapper(style="padding:5px")
+                +sliderm3(0, 255, 0, g, 1, 1, '', '', '', '', 222, 4, 10, '#e6e6e6', 'green', 'green', 'lightgrey', 'white')
+            .chooseColor__wrapper(style="padding:5px")
+                +sliderm3(0, 255, 0, b, 1, 1, '', '', '', '', 222, 4, 10, '#e6e6e6', 'blue', 'blue', 'lightgrey', 'white')
+            .chooseColor__wrapper(style="padding:5px")
+                +sliderm3(0, 255, 0, o, 1, 1, '', '', '', '', 222, 4, 10, '#e6e6e6', 'lightgrey', 'lightgrey', 'lightgrey', 'white')
+        .chooseColor__item(style=itemStyle)
+            header Point color
+            .chooseColor__wrapper(style="padding:5px")
+                +sliderm3(0, 255, 0, pr, 1, 1, '', '', '', '', 222, 4, 10, '#e6e6e6', 'red', 'red', 'lightgrey', 'white')
+            .chooseColor__wrapper(style="padding:5px")
+                +sliderm3(0, 255, 0, pg, 1, 1, '', '', '', '', 222, 4, 10, '#e6e6e6', 'green', 'green', 'lightgrey', 'white')
+            .chooseColor__wrapper(style="padding:5px")
+                +sliderm3(0, 255, 0, pb, 1, 1, '', '', '', '', 222, 4, 10, '#e6e6e6', 'blue', 'blue', 'lightgrey', 'white')
+            .chooseColor__wrapper(style="padding:5px")
+                +sliderm3(0, 255, 0, po, 1, 1, '', '', '', '', 222, 4, 10, '#e6e6e6', 'lightgrey', 'lightgrey', 'lightgrey', 'white')
+        .chooseColor__item(style=itemStyle)
+            header Scale color
+            .chooseColor__wrapper(style="padding:5px")
+                +sliderm3(0, 255, 0, pr, 1, 1, '', '', '', '', 222, 4, 10, '#e6e6e6', 'red', 'red', 'lightgrey', 'white')
+            .chooseColor__wrapper(style="padding:5px")
+                +sliderm3(0, 255, 0, pg, 1, 1, '', '', '', '', 222, 4, 10, '#e6e6e6', 'green', 'green', 'lightgrey', 'white')
+            .chooseColor__wrapper(style="padding:5px")
+                +sliderm3(0, 255, 0, pb, 1, 1, '', '', '', '', 222, 4, 10, '#e6e6e6', 'blue', 'blue', 'lightgrey', 'white')
+            .chooseColor__wrapper(style="padding:5px")
+                +sliderm3(0, 255, 0, po, 1, 1, '', '', '', '', 222, 4, 10, '#e6e6e6', 'lightgrey', 'lightgrey', 'lightgrey', 'white')
+        .chooseColor__item(style=itemStyle)
+            header Text color
+            .chooseColor__wrapper(style="padding:5px")
+                +sliderm3(0, 255, 0, 255, 1, 1, '', '', '', '', 222, 4, 10, '#e6e6e6', 'red', 'red', 'lightgrey', 'white')
+            .chooseColor__wrapper(style="padding:5px")
+                +sliderm3(0, 255, 0, 255, 1, 1, '', '', '', '', 222, 4, 10, '#e6e6e6', 'green', 'green', 'lightgrey', 'white')
+            .chooseColor__wrapper(style="padding:5px")
+                +sliderm3(0, 255, 0, 255, 1, 1, '', '', '', '', 222, 4, 10, '#e6e6e6', 'blue', 'blue', 'lightgrey', 'white')
+            .chooseColor__wrapper(style="padding:5px")
+                +sliderm3(0, 255, 0, 200, 1, 1, '', '', '', '', 222, 4, 10, '#e6e6e6', 'lightgrey', 'lightgrey', 'lightgrey', 'white')
+

@@ -1,0 +1,24 @@
+$color-lightgray: #e5e5e5;
+$color-grey: gray;
+$color-green: #4eb7a8;
+
+.tick {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: $color-lightgray;
+    color: $color-grey;
+    text-align: center;
+    user-select: none;
+
+    i {
+        font-size: 18px;
+        margin-top: 3px;
+    }
+    
+    &.true {
+        background-color: $color-green;
+        color: white;
+    }
+}

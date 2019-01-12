@@ -1,0 +1,94 @@
+$color-lightgray: #e5e5e5;
+$color-grey: gray;
+
+.sliderm3page {
+    display: block;
+    width: 95%;
+    min-width: 800px;
+    max-width: 1920px;
+    font-family: 'Conv_Lato';
+    font-weight: normal;
+    font-size: 16px;
+    align-self: center;
+    padding: 50px;
+    
+    &__header {
+        display: block;
+        width: auto;
+        margin: 0 auto;
+        margin-bottom: 50px;
+        font-size: 48px;
+        padding: 10px;
+        text-align: center;
+        background-color: $color-lightgray;
+        border-radius: 5px;
+    }
+
+    &__content {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    &__slider {
+        width: 30%;
+        display: flex;
+        justify-content: center;
+
+        &_1st {
+            font-size: 24px;
+        }
+
+        &_2nd {
+            font-size: 12px;
+        }
+    }
+
+    &__inputs {
+        width: 39%;
+        text-align: center;
+    }
+
+    &__label {
+        display: inline-block;
+        width: 120px;
+        color: $color-grey;
+        font-size: 16px;
+        text-align: right;
+
+        &_shot {
+            width: 80px;
+        }
+    }
+
+    &__input {
+        display: inline-block;
+        width: 150px;
+        margin: 4px;
+        height: 30px;
+        border-radius: 5px;
+        border: 0px;
+        background-color: $color-lightgray;
+        color: $color-grey;
+        font-size: 14px;
+        padding-left: 12px;
+    }
+
+    .tick {
+        margin: 10px 10px;
+    }
+
+    &__result {
+        display: inline-block;
+        width: 100%;
+        margin: 4px;
+        border-radius: 5px;
+        border: 0px;
+        background-color: $color-lightgray;
+        color: $color-grey;
+        font-size: 14px;
+        padding-left: 12px;
+    }
+}
+

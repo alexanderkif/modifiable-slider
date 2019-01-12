@@ -1,0 +1,47 @@
+{
+    "sliders" : {
+        "header" : "sliders",
+        "sliders" : [
+            {
+                "min" : 0, 
+                "max" : 100, 
+                "value1" : 20, 
+                "value2" : 40, 
+                "step" : 1, 
+                "intervals" : 3, 
+                "hint" : "true", 
+                "scale" : "", 
+                "interval" : "", 
+                "vertical" : "", 
+                "length" : 260, 
+                "lineHeight" : 5, 
+                "pointSize" : 20, 
+                "colorLine" : "#e6e6e6", 
+                "colorRange" : "#e6e6e6", 
+                "colorPoint" : "#e75735", 
+                "colorScale" : "lightgrey", 
+                "colorText" : "white"
+            },
+            {
+                "min" : 0, 
+                "max" : 100, 
+                "value1" : 0, 
+                "value2" : 75, 
+                "step" : 25, 
+                "intervals" : 4, 
+                "hint" : "", 
+                "scale" : "true", 
+                "interval" : "", 
+                "vertical" : "", 
+                "length" : 260, 
+                "lineHeight" : 5, 
+                "pointSize" : 20, 
+                "colorLine" : "#e6e6e6", 
+                "colorRange" : "#4eb7a8", 
+                "colorPoint" : "#4eb7a8", 
+                "colorScale" : "lightgrey", 
+                "colorText" : "white"
+            }
+        ]
+    }
+}
