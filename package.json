@@ -2,7 +2,7 @@
   "name": "modifiable-slider",
   "version": "1.0.0",
   "description": "modifiable-slider",
-  "main": "index.js",
+  "main": "dist/main.js",
   "scripts": {
     "dev": "webpack --mode development --watch",
     "build": "webpack --mode production",
@@ -40,7 +40,6 @@
     "webpack-dev-server": "^3.1.14"
   },
   "dependencies": {
-    "decko": "^1.2.0",
-    "npm": "^6.4.1"
+    "decko": "^1.2.0"
   }
 }
