@@ -6,4 +6,4 @@ import "./components/form-toggle/form-toggle";
 import "./public/js/lc_switch.min.js";
 import "./public/css/lc_switch.css";
 
-console.log("Run flatUI...");
+console.log("Run...");
