@@ -1,7 +1,7 @@
 {
-  "name": "resume",
+  "name": "modifiable-slider",
   "version": "1.0.0",
-  "description": "",
+  "description": "modifiable-slider",
   "main": "index.js",
   "scripts": {
     "dev": "webpack --mode development --watch",
@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alexanderkif/flatUI.git"
+    "url": "git+https://github.com/alexanderkif/modifiable-slider.git"
   },
-  "author": "",
+  "author": "alexanderkif",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/alexanderkif/flatUI/issues"
+    "url": "https://github.com/alexanderkif/modifiable-slider/issues"
   },
-  "homepage": "https://github.com/alexanderkif/flatUI#readme",
+  "homepage": "https://github.com/alexanderkif/modifiable-slider#readme",
   "devDependencies": {
     "apply-loader": "^2.0.0",
     "babel-core": "^6.26.3",
