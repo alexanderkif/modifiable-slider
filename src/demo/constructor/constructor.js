@@ -1,6 +1,6 @@
 import { bind } from 'decko';
-import "./sliderm3page.scss";
-import "../components/tick/tick.scss";
+import "./constructor.scss";
+import "../tick/tick.scss";
 
 class Sliderm3pageContent {
     constructor(element) {

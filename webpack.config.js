@@ -3,10 +3,13 @@ const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
-  entry: { main: './src/index.js' },
+  entry: { 
+    main: './src/demo/index.js',
+    sliderm3: './src/sliderm3.js' 
+  },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'main.js'
+    filename: '[name].js'
   },
   module: {
     rules: [
@@ -46,7 +49,6 @@ module.exports = {
       },
       {
         test: /\.(jpe?g|png|gif|svg)$/i, 
-        // loader: "file-loader?name=/img/[name].[ext]"
         exclude: /fonts/,
         use: [{
           loader: 'file-loader',
@@ -62,7 +64,7 @@ module.exports = {
           loader: 'file-loader',
           options: {
               name: '[name].[ext]',
-              outputPath: 'img/'
+              outputPath: '/'
           }
         }],
       },
@@ -72,15 +74,9 @@ module.exports = {
     new ExtractTextPlugin(
         {filename: 'style.css'}
     ),
-    // new HtmlWebpackPlugin({
-    //   inject: false,
-    //   hash: true,
-    //   template: './src/index.html',
-    //   filename: 'index.html'
-    // })
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: 'src/index.pug',
+      template: 'src/demo/index.pug',
       inject: false,
       metadata: {
         // available in index.pug under locals
@@ -89,8 +85,8 @@ module.exports = {
       }
     }),
     new HtmlWebpackPlugin({
-      filename: 'sliderm3page.html',
-      template: 'src/html/sliderm3page.pug'
+      filename: 'constructor.html',
+      template: 'src/demo/constructor/constructor.pug'
     })
   ],
   devServer: {

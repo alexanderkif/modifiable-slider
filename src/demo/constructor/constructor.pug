@@ -1,5 +1,5 @@
-include ../components/sliderm3/sliderm3
-include ../components/tick/tick
+include ../sliderm3/sliderm3
+include ../tick/tick
 include ../chooseColor/chooseColor
 
 - var page= 'Sliderm3 constructor'
@@ -8,7 +8,7 @@ html
     head
         meta(charset='UTF-8')
         title= page
-        link(href="img/favicon.ico" rel="icon" type="image/x-icon")
+        link(href="favicon.ico" rel="icon" type="image/x-icon")
         link(href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet")
         link(href="https://unpkg.com/ionicons@4.3.0/dist/css/ionicons.min.css" rel="stylesheet")
         link(rel="stylesheet" href="style.css")
@@ -16,6 +16,7 @@ html
     body
         .sliderm3page
             .sliderm3page__header= page
+                a(href="/" style="font-size: 20px;text-decoration: none;color: inherit;")     (to demo)
             .sliderm3page__content
                 .sliderm3page__slider.sliderm3page__slider_1st
                     //- sliderm3(min, max, value1, value2, step, intervals, hint, scale, interval, vertical,  
