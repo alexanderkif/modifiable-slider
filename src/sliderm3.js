@@ -114,6 +114,7 @@ class Sliderm3 {
         var digit;
         for(var i = 0; i <= this.div.dataset.intervals; i++) {
             digit = document.createElement('li');
+            digit.className = "sliderm3__digit";
             digit.style.listStyleType = 'none';
             digit.innerHTML = Math.round( +this.div.dataset.min + (this.div.dataset.max - this.div.dataset.min) * i / this.div.dataset.intervals);
             this.scaleDiv.appendChild(digit);
@@ -183,30 +184,30 @@ class Sliderm3 {
 
     @bind
     drawHint(div, value) {
-        this.hintDiv = document.createElement("div");
-        this.hintDiv.className = "sliderm3__hint";
-        this.hintDiv.style.position = 'absolute';
-        this.hintDiv.style.display = 'flex';
-        this.hintDiv.style.alignItems = 'center';
-        this.hintDiv.style.padding = '2px 8px';
-        this.hintDiv.style.borderRadius = '4px';
-        this.hintDiv.style.height = `${this.div.dataset.pointSize}px`;
-        this.hintDiv.style.fontSize = `${this.div.dataset.pointSize * 4 / 6}px`;
-        this.hintDiv.style.backgroundColor = 'inherit';
-        this.hintDiv.style.color = this.div.dataset.colorText;
-        this.hintDiv.innerHTML = Math.round(value * 100) / 100;
-        div.appendChild(this.hintDiv);
+        var hintDiv = document.createElement("div");
+        hintDiv.className = "sliderm3__hint";
+        hintDiv.style.position = 'absolute';
+        hintDiv.style.display = 'flex';
+        hintDiv.style.alignItems = 'center';
+        hintDiv.style.padding = '2px 8px';
+        hintDiv.style.borderRadius = '4px';
+        hintDiv.style.height = `${this.div.dataset.pointSize}px`;
+        hintDiv.style.fontSize = `${this.div.dataset.pointSize * 4 / 6}px`;
+        hintDiv.style.backgroundColor = 'inherit';
+        hintDiv.style.color = this.div.dataset.colorText;
+        hintDiv.innerHTML = Math.round(value * 100) / 100;
+        div.appendChild(hintDiv);
         
-        this.arrowDiv = document.createElement("div");
-        this.arrowDiv.className = "sliderm3__arrow";    
-        this.arrowDiv.style.position = 'absolute';
-        this.arrowDiv.style.content = '';
-        this.arrowDiv.style.transform = 'rotate(-45deg)';
-        this.arrowDiv.style.zIndex = '-1';
-        this.arrowDiv.style.height = `${this.div.dataset.pointSize/3}px`;
-        this.arrowDiv.style.width = `${this.div.dataset.pointSize/3}px`;
-        this.arrowDiv.style.backgroundColor = 'inherit';
-        this.hintDiv.appendChild(this.arrowDiv);
+        var arrowDiv = document.createElement("div");
+        arrowDiv.className = "sliderm3__arrow";    
+        arrowDiv.style.position = 'absolute';
+        arrowDiv.style.content = '';
+        arrowDiv.style.transform = 'rotate(-45deg)';
+        arrowDiv.style.zIndex = '-1';
+        arrowDiv.style.height = `${this.div.dataset.pointSize/3}px`;
+        arrowDiv.style.width = `${this.div.dataset.pointSize/3}px`;
+        arrowDiv.style.backgroundColor = 'inherit';
+        hintDiv.appendChild(arrowDiv);
 
         // if (dataset.vertical) {
         //     hintDiv.style.transform = 'rotate(90deg) translateX(0px)';
@@ -215,11 +216,11 @@ class Sliderm3 {
         //     arrowDiv.style.top = `${hintDiv.offsetHeight/2 - arrowDiv.offsetHeight/2}px`;
         //     arrowDiv.style.left = `${hintDiv.offsetWidth - arrowDiv.offsetWidth/2 - 1}px`;
         // } else {
-            this.hintDiv.style.transform = 'rotate(0deg)';
-            this.hintDiv.style.top = `${-this.div.dataset.pointSize*3/2}px`;
-            this.hintDiv.style.left = `${this.div.dataset.pointSize/2 - this.hintDiv.offsetWidth/2}px`;
-            this.arrowDiv.style.top = `${this.hintDiv.offsetHeight - this.arrowDiv.offsetHeight/2}px`;
-            this.arrowDiv.style.left = `${this.hintDiv.offsetWidth/2 - this.arrowDiv.offsetWidth/2}px`;
+            hintDiv.style.transform = 'rotate(0deg)';
+            hintDiv.style.top = `${-this.div.dataset.pointSize*3/2}px`;
+            hintDiv.style.left = `${this.div.dataset.pointSize/2 - hintDiv.offsetWidth/2}px`;
+            arrowDiv.style.top = `${hintDiv.offsetHeight - arrowDiv.offsetHeight/2}px`;
+            arrowDiv.style.left = `${hintDiv.offsetWidth/2 - arrowDiv.offsetWidth/2}px`;
         // }
     };
 }
