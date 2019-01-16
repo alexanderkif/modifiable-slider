@@ -39,13 +39,13 @@ class Sliderm3pageContent {
     sliderm3change() {
         this.setInputs();
         this.inputSlidermResultDiv.innerHTML = `${this.sliderm3Div.outerHTML.split('>')[0]}></div><script src="sliderm3.js"></script>`;
-        this.sliderm3Div.dispatchEvent(new Event('draw'));		
+        this.sliderm3Div.dispatchEvent(new Event('toDraw'));		
     }
 
     @bind
     inputsChange() {
         this.getInputs();
-        this.sliderm3Div.dispatchEvent(new Event('draw'));	
+        this.sliderm3Div.dispatchEvent(new Event('toDraw'));	
     }
 
     @bind
@@ -54,7 +54,7 @@ class Sliderm3pageContent {
         this.setInputs();	
         // if (this.sliderm3Div.div.dataset.interval) 	
         //     this.div.dataset.value1 = this.range.value1 < +this.range.value2 ? this.range.value1 : this.range.value2;	
-        this.sliderm3Div.dispatchEvent(new Event('draw'));
+        this.sliderm3Div.dispatchEvent(new Event('toDraw'));
     }
 
     @bind
@@ -64,7 +64,7 @@ class Sliderm3pageContent {
         this.sliderm3Div.dataset.colorPoint = this.chooseColor2color(this.chooseColorPointDiv);	
         this.sliderm3Div.dataset.colorScale = this.chooseColor2color(this.chooseColorScaleDiv);	
         this.sliderm3Div.dataset.colorText = this.chooseColor2color(this.chooseColorTextDiv);
-        this.sliderm3Div.dispatchEvent(new Event('draw'));	
+        this.sliderm3Div.dispatchEvent(new Event('toDraw'));	
         this.inputSlidermResultDiv.innerHTML = `${this.sliderm3Div.outerHTML.split('>')[0]}></div><script src="sliderm3.js"></script>`;
     };	
 
