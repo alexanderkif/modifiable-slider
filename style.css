@@ -1,18 +1,23 @@
-.tick {
-  display: inline-block;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background-color: #e5e5e5;
-  color: gray;
-  text-align: center;
-  user-select: none; }
-  .tick i {
-    font-size: 18px;
-    margin-top: 3px; }
-  .tick.true {
-    background-color: #4eb7a8;
-    color: white; }
+.sliders {
+  min-height: 112px;
+  padding-top: 20px; }
+  .sliders__header {
+    margin-bottom: 45px; }
+  .sliders__content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-row-gap: 150px; }
+    .sliders__content .sliderm3 {
+      font-size: 13px;
+      font-weight: normal;
+      justify-self: center; }
+
+body {
+  font-family: 'Arial';
+  font-weight: bold;
+  color: #797979;
+  margin: 0 auto; }
 .sliderm3page {
   display: block;
   width: 95%;
@@ -80,23 +85,18 @@
     color: gray;
     font-size: 14px;
     padding-left: 12px; }
-.sliders {
-  min-height: 112px;
-  padding-top: 20px; }
-  .sliders__header {
-    margin-bottom: 45px; }
-  .sliders__content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
-    grid-row-gap: 150px; }
-    .sliders__content .sliderm3 {
-      font-size: 13px;
-      font-weight: normal;
-      justify-self: center; }
-
-body {
-  font-family: 'Arial';
-  font-weight: bold;
-  color: #797979;
-  margin: 0 auto; }
+.tick {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #e5e5e5;
+  color: gray;
+  text-align: center;
+  user-select: none; }
+  .tick i {
+    font-size: 18px;
+    margin-top: 3px; }
+  .tick.true {
+    background-color: #4eb7a8;
+    color: white; }
