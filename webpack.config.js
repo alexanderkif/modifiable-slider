@@ -4,7 +4,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   entry: { 
-    main: './src/demo/index.js',
+    main: './demo/index.js',
     sliderm3: './src/sliderm3.js' 
   },
   output: {
@@ -76,7 +76,7 @@ module.exports = {
     ),
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: 'src/demo/index.pug',
+      template: 'demo/index.pug',
       inject: false,
       metadata: {
         // available in index.pug under locals
@@ -86,7 +86,7 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       filename: 'constructor.html',
-      template: 'src/demo/constructor/constructor.pug'
+      template: 'demo/constructor/constructor.pug'
     })
   ],
   devServer: {
