@@ -1,26 +1,27 @@
 import { bind } from 'decko';
 
 class Sliderm3controller {
-    constructor(element) {
-        this.div = element;
-        // this.model = new Sliderm3model(this.div);
-        this.view = new Sliderm3view(this.div, this.div.dataset);
-
+    constructor(model, view) {
+        this.model = model;
+        this.view = view;
         this.toDraw();
-        this.div.oncontextmenu = function() {return false;};    
-        this.div.ondragstart = function() {return false;};
-        this.div.onselectstart = function() {return false;};
         document.addEventListener('mousemove', this.sliderm3MouseMoveListener);
         document.addEventListener('mouseup', this.sliderm3CancelMove);
         this.mousedown = 0;
         window.addEventListener('resize', this.Sliderm3ResizeThrottler);
-        this.div.addEventListener('toDraw', this.toDraw);
+        this.view.div.addEventListener('sliderm3modelChanged', this.sliderm3modelChanged);
+    }
+
+    @bind
+    sliderm3modelChanged() {
+        this.model.dataset = this.view.div.dataset;
+        this.toDraw();
     }
 
     @bind
     toDraw() {
-        this.view.model = this.div.dataset;
-        this.div.dispatchEvent(new Event('draw'));
+        this.view.model = this.model.dataset;
+        this.view.div.dispatchEvent(new Event('draw'));
         this.view.lineDiv.addEventListener('mousedown', this.sliderm3MouseDownListener);
     }
 
@@ -36,7 +37,7 @@ class Sliderm3controller {
     
     @bind
     sliderm3MouseDownListener(e) {
-        if (this.div.dataset.interval && e.clientX < this.getCoords(this.view.rangeDiv).left + this.view.rangeDiv.offsetWidth - this.div.dataset.pointSize/2)
+        if (this.model.dataset.interval && e.clientX < this.getCoords(this.view.rangeDiv).left + this.view.rangeDiv.offsetWidth - this.model.dataset.pointSize/2)
             this.mousedown = 1;
         else
             this.mousedown = 2;
@@ -52,18 +53,18 @@ class Sliderm3controller {
 
     @bind
     changeRange(e) {
-        var newValue = this.div.dataset.step * Math.round((+this.div.dataset.min + (e.clientX - this.getCoords(this.view.lineDiv).left - +this.div.dataset.lineHeight/2) * this.view.range / this.view.rangeMaxWidth) / this.div.dataset.step);
+        var newValue = this.model.dataset.step * Math.round((+this.model.dataset.min + (e.clientX - this.getCoords(this.view.lineDiv).left - +this.model.dataset.lineHeight/2) * this.view.range / this.view.rangeMaxWidth) / this.model.dataset.step);
         if (this.mousedown == 1) {
-            this.div.dataset.value1 = newValue;
-            if (+this.div.dataset.value1 > +this.div.dataset.value2) this.div.dataset.value1 = this.div.dataset.value2;
-            if (+this.div.dataset.value1 < +this.div.dataset.min) this.div.dataset.value1 = this.div.dataset.min;
+            this.model.dataset.value1 = newValue;
+            if (+this.model.dataset.value1 > +this.model.dataset.value2) this.model.dataset.value1 = this.model.dataset.value2;
+            if (+this.model.dataset.value1 < +this.model.dataset.min) this.model.dataset.value1 = this.model.dataset.min;
         }
         if (this.mousedown == 2) {
-            this.div.dataset.value2 = newValue;
-            if (this.div.dataset.interval && +this.div.dataset.value2 < +this.div.dataset.value1) 
-                this.div.dataset.value2 = this.div.dataset.value1;
-            if (!this.div.dataset.interval && +this.div.dataset.value2 < +this.div.dataset.min) this.div.dataset.value2 = this.div.dataset.min;
-            if (+this.div.dataset.value2 > +this.div.dataset.max) this.div.dataset.value2 = this.div.dataset.max;
+            this.model.dataset.value2 = newValue;
+            if (this.model.dataset.interval && +this.model.dataset.value2 < +this.model.dataset.value1) 
+                this.model.dataset.value2 = this.model.dataset.value1;
+            if (!this.model.dataset.interval && +this.model.dataset.value2 < +this.model.dataset.min) this.model.dataset.value2 = this.model.dataset.min;
+            if (+this.model.dataset.value2 > +this.model.dataset.max) this.model.dataset.value2 = this.model.dataset.max;
         }
         this.toDraw();
     }
@@ -82,42 +83,22 @@ class Sliderm3controller {
     }
 }
 
-// class Sliderm3model {
-//     constructor(element) {
-//         this.div = element;
-//         // this.getDataset(element);
-//     }
-
-//     // @bind
-//     // getDataset(element) {
-//     //     this.min = element.dataset.min;
-//     //     this.max = element.dataset.max;
-//     //     this.value1 = element.dataset.value1;
-//     //     this.value2 = element.dataset.value2;
-//     //     this.step = element.dataset.step;
-//     //     this.intervals = element.dataset.intervals;
-//     //     this.hint = element.dataset.hint;
-//     //     this.scale = element.dataset.scale;
-//     //     this.interval = element.dataset.interval;
-//     //     this.vertical = element.dataset.vertical;
-//     //     this.length = element.dataset.length;
-//     //     this.lineHeight = element.dataset.lineHeight;
-//     //     this.pointSize = element.dataset.pointSize;
-//     //     this.colorLine = element.dataset.colorLine;
-//     //     this.colorRange = element.dataset.colorRange;
-//     //     this.colorPoint = element.dataset.colorPoint;
-//     //     this.colorScale = element.dataset.colorScale;
-//     //     this.colorText = element.dataset.colorText;
-//     // }
-// }
+class Sliderm3model {
+    constructor(dataset) {
+        this.dataset = dataset;
+    }
+}
 
 class Sliderm3view {
-    constructor(element, model) {
+    constructor(element) {
         this.div = element;
-        this.model = model;
+        this.model = element.dataset;
         this.div.style.position = 'relative';
         this.div.style.userSelect = 'none';
         this.div.style.width = '100%';
+        this.div.oncontextmenu = function() {return false;};    
+        this.div.ondragstart = function() {return false;};
+        this.div.onselectstart = function() {return false;};
         this.draw();
         this.div.addEventListener('draw', this.draw);
     }
@@ -271,4 +252,4 @@ class Sliderm3view {
     };
 }
 
-[].forEach.call(document.getElementsByClassName('sliderm3'), element => new Sliderm3controller(element));
+[].forEach.call(document.getElementsByClassName('sliderm3'), element => new Sliderm3controller(new Sliderm3model(element.dataset), new Sliderm3view(element)));
