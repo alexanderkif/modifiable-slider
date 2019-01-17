@@ -8,7 +8,7 @@ class Sliderm3controller {
         document.addEventListener('mousemove', this.sliderm3MouseMoveListener);
         document.addEventListener('mouseup', this.sliderm3CancelMove);
         this.mousedown = 0;
-        window.addEventListener('resize', this.Sliderm3ResizeThrottler);
+        window.addEventListener('resize', this.sliderm3ResizeThrottler);
         this.view.div.addEventListener('sliderm3modelChanged', this.sliderm3modelChanged);
     }
 
@@ -26,7 +26,7 @@ class Sliderm3controller {
     }
 
     @bind
-    Sliderm3ResizeThrottler() {
+    sliderm3ResizeThrottler() {
         if ( !this.resizeTimeout ) {
             this.resizeTimeout = setTimeout(function() {
                 this.resizeTimeout = null;
