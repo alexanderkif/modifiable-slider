@@ -90,11 +90,12 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
-    grid-row-gap: 150px; }
+    grid-row-gap: 50px; }
     .sliders__content .sliderm3 {
       font-size: 13px;
       font-weight: normal;
-      justify-self: center; }
+      justify-self: center;
+      align-self: center; }
 
 body {
   font-family: 'Arial';
