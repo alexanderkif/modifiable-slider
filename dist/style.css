@@ -41,7 +41,8 @@
   .sliderm3page__slider {
     width: 30%;
     display: flex;
-    justify-content: center; }
+    justify-content: center;
+    padding: 30px 0px; }
     .sliderm3page__slider_1st {
       font-size: 24px; }
     .sliderm3page__slider_2nd {
