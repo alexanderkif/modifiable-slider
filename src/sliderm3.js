@@ -5,9 +5,8 @@ class Sliderm3controller {
         this.model = model;
         this.view = view;
         this.toDraw();
-        document.addEventListener('mousemove', this.sliderm3MouseMoveListener);
         document.addEventListener('mouseup', this.sliderm3CancelMove);
-        this.mousedown = 0;
+        this.activePoint = 0;
         window.addEventListener('resize', this.sliderm3ResizeThrottler);
         this.view.div.addEventListener('sliderm3modelChanged', this.sliderm3modelChanged);
     }
@@ -15,6 +14,8 @@ class Sliderm3controller {
     @bind
     sliderm3modelChanged() {
         this.model.dataset = this.view.div.dataset;
+        this.model.checkValue1();
+        this.model.checkValue2();
         this.toDraw();
     }
 
@@ -37,44 +38,47 @@ class Sliderm3controller {
     
     @bind
     sliderm3MouseDownListener(e) {
-        var overPoint2;
+        var lessThanPoint2;
         if (this.model.dataset.vertical) {
-            overPoint2 = e.clientY > this.getCoords(this.view.point2Div).top + +this.model.dataset.pointSize;
+            lessThanPoint2 = e.clientY > this.getCoords(this.view.point2Div).top + +this.model.dataset.pointSize;
         }
         else {
-            overPoint2 = e.clientX < this.getCoords(this.view.rangeDiv).left + +this.view.rangeDiv.offsetWidth - +this.model.dataset.pointSize/2;
+            lessThanPoint2 = e.clientX < this.getCoords(this.view.point2Div).left;
         }
-        if (this.model.dataset.interval && overPoint2)
-                this.mousedown = 1;
-            else
-                this.mousedown = 2;
+        if (this.model.dataset.interval && lessThanPoint2)
+            this.activePoint = 1;
+        else
+            this.activePoint = 2;
+        document.addEventListener('mousemove', this.sliderm3MouseMoveListener);
         this.changeRange(e);
     }
     
     @bind
     sliderm3MouseMoveListener(e) {
-        if (this.mousedown != 0) {
+        if (this.activePoint != 0) {
             this.changeRange(e);
         }
     }
 
     @bind
     changeRange(e) {
-        var diff;
+        var differenceInPixels;
         if (this.model.dataset.vertical) {
-            diff = this.view.lineDiv.offsetHeight - (e.clientY - this.getCoords(this.view.lineDiv).top + +this.model.dataset.lineHeight/2);
+            differenceInPixels = this.view.lineDiv.offsetHeight - (e.clientY - this.getCoords(this.view.lineDiv).top + +this.model.dataset.lineHeight/2);
         }
         else {
-            diff = e.clientX - this.getCoords(this.view.lineDiv).left - +this.model.dataset.lineHeight/2;
+            differenceInPixels = e.clientX - this.getCoords(this.view.lineDiv).left - +this.model.dataset.lineHeight/2;
         }
-        var newValue = this.model.dataset.step * Math.round((+this.model.dataset.min + diff * this.view.range / this.view.rangeMaxWidth) / this.model.dataset.step);
-        this.model.checkNewValue(newValue, this.mousedown);
+        var newValue = this.model.dataset.step * Math.round((+this.model.dataset.min + differenceInPixels * this.view.range / this.view.rangeMaxWidth) / this.model.dataset.step);
+        if (this.activePoint == 1) this.model.setNewValue1(newValue);
+        if (this.activePoint == 2) this.model.setNewValue2(newValue);
         this.toDraw();
     }
 
     @bind
     sliderm3CancelMove() {
-        this.mousedown = 0;
+        this.activePoint = 0;
+        document.removeEventListener('mousemove', this.sliderm3MouseMoveListener);
     }
 
     getCoords(elem) {
@@ -91,19 +95,30 @@ class Sliderm3model {
         this.dataset = dataset;
     }
 
-    checkNewValue(newValue, mousedown) {
-        if (mousedown == 1) {
-            this.dataset.value1 = newValue;
-            if (+this.dataset.value1 > +this.dataset.value2) this.dataset.value1 = this.dataset.value2;
-            if (+this.dataset.value1 < +this.dataset.min) this.dataset.value1 = this.dataset.min;
-        }
-        if (mousedown == 2) {
-            this.dataset.value2 = newValue;
-            if (this.dataset.interval && +this.dataset.value2 < +this.dataset.value1) 
-                this.dataset.value2 = this.dataset.value1;
-            if (!this.dataset.interval && +this.dataset.value2 < +this.dataset.min) this.dataset.value2 = this.dataset.min;
-            if (+this.dataset.value2 > +this.dataset.max) this.dataset.value2 = this.dataset.max;
-        }
+    setNewValue1(newValue) {
+        this.dataset.value1 = newValue;
+        this.checkValue1();
+    }
+
+    checkValue1() {
+        if (+this.dataset.value1 > +this.dataset.value2)
+            this.dataset.value1 = this.dataset.value2;
+        if (+this.dataset.value1 < +this.dataset.min)
+            this.dataset.value1 = this.dataset.min;
+    }
+
+    setNewValue2(newValue) {
+        this.dataset.value2 = newValue;
+        this.checkValue2();
+    }
+
+    checkValue2() {
+        if (this.dataset.interval && +this.dataset.value2 < +this.dataset.value1)
+            this.dataset.value2 = this.dataset.value1;
+        if (!this.dataset.interval && +this.dataset.value2 < +this.dataset.min)
+            this.dataset.value2 = this.dataset.min;
+        if (+this.dataset.value2 > +this.dataset.max)
+            this.dataset.value2 = this.dataset.max;
     }
 }
 
