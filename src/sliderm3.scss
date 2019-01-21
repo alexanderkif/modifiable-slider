@@ -1,0 +1,47 @@
+
+.sliderm3 {
+    position: relative;
+    user-select: none;
+    width: 100%;
+
+    &__scale {
+        position: absolute;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &__range {
+        height: inherit;
+        position: absolute;
+        border-radius: inherit;
+        background-color: rgba(255, 255, 255, 0);
+    }
+
+    &__point-range {
+        position: absolute;
+    }
+
+    &__point {
+        position: absolute;
+        border-radius: 50%;
+    }
+
+    &__hint {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        padding: 2px 8px;
+        border-radius: 4px;
+        background-color: inherit;
+    }
+
+    &__arrow {
+        position: absolute;
+        content: "";
+        transform: rotate(-45deg);
+        z-index: -1;
+        background-color: inherit;
+    }
+}
