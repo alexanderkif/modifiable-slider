@@ -2,7 +2,6 @@
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const devMode = process.env.NODE_ENV !== 'production';
 module.exports = {
   entry: { 
     main: './demo/index.js',
@@ -24,7 +23,14 @@ module.exports = {
       {
         test: /\.(sa|sc|c)ss$/,
         use: [
-          devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              // you can specify a publicPath here
+              // by default it use publicPath in webpackOptions.output
+              publicPath: '../'
+            }
+          },
           'css-loader',
           // 'postcss-loader',
           'sass-loader',
@@ -78,8 +84,8 @@ module.exports = {
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
       // both options are optional
-      filename: devMode ? '[name].css' : '[name].[hash].css',
-      chunkFilename: devMode ? '[id].css' : '[id].[hash].css',
+      filename: "[name].css"
+      // chunkFilename: "[id].css"
     }),
     new HtmlWebpackPlugin({
       filename: 'index.html',

@@ -6,34 +6,41 @@ const TIME_PERIOD = 50;
 export default class View extends EventObserver {
     constructor(element) {
         super();
-        this.div = element;
-        this.model = element.dataset;
-        this.div.oncontextmenu = function() {return false;};    
-        this.div.ondragstart = function() {return false;};
-        this.div.onselectstart = function() {return false;};
+        this.element = element;
+        this.model = this.element.dataset;
+        this.element.oncontextmenu = function() {return false;};    
+        this.element.ondragstart = function() {return false;};
+        this.element.onselectstart = function() {return false;};
         this.draw();
-        this.div.addEventListener('draw', this.draw);
+        this.element.addEventListener('draw', this.draw);
         document.addEventListener('mouseup', this.cancelMove);
         this.activePoint = 0;
         window.addEventListener('resize', this.resizeThrottler);
-        this.div.addEventListener('refreshView', this.draw);
+        this.element.addEventListener('refreshView', this.refreshView);
+    }
+    
+    @bind
+    refreshView() {
+        this.broadcast({model: this.model, activePoint: this.activePoint});
+        this.draw();
     }
     
     @bind
     mouseDownListener(e) {
         var lessThanPoint2;
-        if (this.div.dataset.vertical) {
-            lessThanPoint2 = e.clientY > this.getCoords(this.point2Div).top + +this.div.dataset.pointSize;
+        if (this.model.vertical) {
+            lessThanPoint2 = e.clientY > this.getCoords(this.point2Div).top + +this.model.pointSize;
         }
         else {
             lessThanPoint2 = e.clientX < this.getCoords(this.point2Div).left;
         }
-        if (this.div.dataset.interval && lessThanPoint2)
+        if (this.model.interval && lessThanPoint2) 
             this.activePoint = 1;
-        else
+        else 
             this.activePoint = 2;
+        this.setModelFromEvent(e);
         document.addEventListener('mousemove', this.mouseMoveListener);
-        this.broadcast({newValue: this.countNewValue(e), activePoint: this.activePoint});
+        this.broadcast({model: this.model, activePoint: this.activePoint});
     }
 
     getCoords(elem) {
@@ -44,7 +51,14 @@ export default class View extends EventObserver {
         };
     }
 
-    countNewValue(e) {
+    setModelFromEvent(e) {
+        if (this.activePoint == 1) 
+            this.model.startRange = this.getNewValueFromEvent(e);
+        else
+            this.model.endRange = this.getNewValueFromEvent(e);
+    }
+
+    getNewValueFromEvent(e) {
         var differenceInPixels;
         if (this.model.vertical)
             differenceInPixels = this.lineDiv.offsetHeight - (e.clientY - this.getCoords(this.lineDiv).top + +this.model.lineHeight/2);
@@ -55,8 +69,10 @@ export default class View extends EventObserver {
     
     @bind
     mouseMoveListener(e) {
-        if (this.activePoint != 0)
-            this.broadcast({newValue: this.countNewValue(e), activePoint: this.activePoint});
+        if (this.activePoint != 0) {
+            this.setModelFromEvent(e);
+            this.broadcast({model: this.model, activePoint: this.activePoint});
+        }
     }
 
     @bind
@@ -91,15 +107,15 @@ export default class View extends EventObserver {
         this.lineDiv.className = "sliderm3__line";
         if (this.model.vertical) {
             this.lineDiv.style.height = this.model.length;
-            this.div.style.maxWidth = `${this.model.lineHeight}px`;
+            this.element.style.maxWidth = `${this.model.lineHeight}px`;
         }
         else {
             this.lineDiv.style.height = `${this.model.lineHeight}px`;
-            this.div.style.maxWidth = this.model.length;
+            this.element.style.maxWidth = this.model.length;
         }
         this.lineDiv.style.borderRadius = `${this.model.lineHeight / 2}px`;
         this.lineDiv.style.backgroundColor = this.model.colorLine;
-        this.div.appendChild(this.lineDiv); 
+        this.element.appendChild(this.lineDiv); 
         this.lineDiv.addEventListener('mousedown', this.mouseDownListener);
     };
     
@@ -136,8 +152,8 @@ export default class View extends EventObserver {
         this.rangeDiv = document.createElement("div");
         this.rangeDiv.className = "sliderm3__range";
         if (this.model.interval) {
-            var long = (this.model.value2 - this.model.value1) * this.rangeMaxWidth / this.range;
-            var startline = (this.model.value1 - this.model.min) * this.rangeMaxWidth / this.range;
+            var long = (this.model.endRange - this.model.startRange) * this.rangeMaxWidth / this.range;
+            var startline = (this.model.startRange - this.model.min) * this.rangeMaxWidth / this.range;
             if (this.model.vertical) {
                 this.rangeDiv.style.height = `${long}px`;
                 this.rangeDiv.style.top = `${this.rangeMaxWidth - long - startline + this.model.lineHeight / 2}px`;
@@ -148,7 +164,7 @@ export default class View extends EventObserver {
             }
         }
         else {
-            var long = (this.model.value2 - this.model.min) * this.rangeMaxWidth / this.range;
+            var long = (this.model.endRange - this.model.min) * this.rangeMaxWidth / this.range;
             if (this.model.vertical) {
                 this.rangeDiv.style.height = `${long}px`;
                 this.rangeDiv.style.top = `${this.rangeMaxWidth - long + this.model.lineHeight / 2}px`;
@@ -193,7 +209,7 @@ export default class View extends EventObserver {
         }
         this.point1Div.style.backgroundColor = this.model.colorPoint;
         this.rangeDiv.appendChild(this.point1Div);
-        if (this.model.hint) this.drawHint(this.point1Div, this.model.value1);
+        if (this.model.hint) this.drawHint(this.point1Div, this.model.startRange);
     };
     
     @bind
@@ -211,7 +227,7 @@ export default class View extends EventObserver {
         }
         this.point2Div.style.backgroundColor = this.model.colorPoint;
         this.rangeDiv.appendChild(this.point2Div);
-        if (this.model.hint) this.drawHint(this.point2Div, this.model.value2);
+        if (this.model.hint) this.drawHint(this.point2Div, this.model.endRange);
     };
 
     @bind

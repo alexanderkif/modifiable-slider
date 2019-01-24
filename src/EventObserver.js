@@ -1,5 +1,5 @@
 
-class EventObserver {
+export default class EventObserver {
     constructor () {
       this.observers = []
     }
@@ -16,5 +16,3 @@ class EventObserver {
       this.observers.forEach(subscriber => subscriber(data))
     }
 }
-
-export default EventObserver;

@@ -2,36 +2,36 @@ import { bind } from 'decko';
 
 export default class Model {
     constructor(dataset) {
-        this.dataset = dataset;
+        Object.assign(this, dataset);
     }
 
     @bind
-    setNewValue1(newValue) {
-        this.dataset.value1 = newValue;
-        this.checkValue1();
+    setStartRange(newValue) {
+        this.startRange = newValue;
+        this.checkStartRange();
     }
 
     @bind
-    checkValue1() {
-        if (+this.dataset.value1 > +this.dataset.value2)
-            this.dataset.value1 = this.dataset.value2;
-        if (+this.dataset.value1 < +this.dataset.min)
-            this.dataset.value1 = this.dataset.min;
+    checkStartRange() {
+        if (+this.startRange > +this.endRange)
+            this.startRange = this.endRange;
+        if (+this.startRange < +this.min)
+            this.startRange = this.min;
     }
 
     @bind
-    setNewValue2(newValue) {
-        this.dataset.value2 = newValue;
-        this.checkValue2();
+    setEndRange(newValue) {
+        this.endRange = newValue;
+        this.checkEndRange();
     }
 
     @bind
-    checkValue2() {
-        if (this.dataset.interval && +this.dataset.value2 < +this.dataset.value1)
-            this.dataset.value2 = this.dataset.value1;
-        if (!this.dataset.interval && +this.dataset.value2 < +this.dataset.min)
-            this.dataset.value2 = this.dataset.min;
-        if (+this.dataset.value2 > +this.dataset.max)
-            this.dataset.value2 = this.dataset.max;
+    checkEndRange() {
+        if (this.interval && +this.endRange < +this.startRange)
+            this.endRange = this.startRange;
+        if (!this.interval && +this.endRange < +this.min)
+            this.endRange = this.min;
+        if (+this.endRange > +this.max)
+            this.endRange = this.max;
     }
 }

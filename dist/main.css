@@ -1,0 +1,107 @@
+.sliders {
+  min-height: 112px;
+  padding-top: 20px; }
+  .sliders__header {
+    margin-bottom: 45px; }
+  .sliders__content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-row-gap: 50px; }
+    .sliders__content .sliderm3 {
+      font-size: 13px;
+      font-weight: normal;
+      justify-self: center;
+      align-self: center; }
+
+body {
+  font-family: 'Arial';
+  font-weight: bold;
+  color: #797979;
+  margin: 0 auto; }
+
+.sliderm3page {
+  display: block;
+  width: 95%;
+  min-width: 800px;
+  max-width: 1920px;
+  font-family: 'Arial';
+  font-weight: normal;
+  font-size: 16px;
+  align-self: center;
+  padding: 50px; }
+  .sliderm3page__header {
+    display: block;
+    width: auto;
+    margin: 0 auto;
+    margin-bottom: 50px;
+    font-size: 48px;
+    padding: 10px;
+    text-align: center;
+    background-color: #e5e5e5;
+    border-radius: 5px; }
+  .sliderm3page__content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center; }
+  .sliderm3page__slider {
+    width: 30%;
+    display: flex;
+    justify-content: center;
+    padding: 30px 0px; }
+    .sliderm3page__slider_1st {
+      font-size: 24px; }
+    .sliderm3page__slider_2nd {
+      font-size: 12px; }
+  .sliderm3page__inputs {
+    width: 39%;
+    text-align: center; }
+  .sliderm3page__label {
+    display: inline-block;
+    width: 120px;
+    color: gray;
+    font-size: 16px;
+    text-align: right; }
+    .sliderm3page__label_shot {
+      width: 80px; }
+  .sliderm3page__input {
+    display: inline-block;
+    width: 150px;
+    margin: 4px;
+    height: 30px;
+    border-radius: 5px;
+    border: 0px;
+    background-color: #e5e5e5;
+    color: gray;
+    font-size: 14px;
+    padding-left: 12px; }
+  .sliderm3page .tick {
+    margin: 10px 10px; }
+  .sliderm3page__result {
+    display: inline-block;
+    width: 100%;
+    margin: 4px;
+    border-radius: 5px;
+    border: 0px;
+    background-color: #e5e5e5;
+    color: gray;
+    font-size: 14px;
+    padding-left: 12px; }
+
+.tick {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #e5e5e5;
+  color: gray;
+  text-align: center;
+  user-select: none; }
+  .tick i {
+    font-size: 18px;
+    margin-top: 3px; }
+  .tick.true {
+    background-color: #4eb7a8;
+    color: white; }
+
