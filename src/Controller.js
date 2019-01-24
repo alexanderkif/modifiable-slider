@@ -1,6 +1,6 @@
 import { bind } from 'decko';
 
-class Sliderm3controller {
+export default class Controller {
     constructor(model, view) {
         this.model = model;
         this.view = view;
@@ -21,5 +21,3 @@ class Sliderm3controller {
         this.view.div.dispatchEvent(new Event('draw'));
     }
 }
-
-export default Sliderm3controller;

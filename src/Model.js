@@ -1,6 +1,6 @@
 import { bind } from 'decko';
 
-class Sliderm3model {
+export default class Model {
     constructor(dataset) {
         this.dataset = dataset;
     }
@@ -35,5 +35,3 @@ class Sliderm3model {
             this.dataset.value2 = this.dataset.max;
     }
 }
-
-export default Sliderm3model;

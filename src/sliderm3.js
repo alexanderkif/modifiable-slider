@@ -1,9 +1,9 @@
-import Sliderm3model from './sliderm3model';
-import Sliderm3view from './sliderm3view';
-import Sliderm3controller from './sliderm3controller';
+import Model from './Model';
+import View from './View';
+import Controller from './Controller';
 
 [].forEach.call(document.getElementsByClassName('sliderm3'), element => {
-    var model = new Sliderm3model(element.dataset);
-    var view = new Sliderm3view(element);
-    new Sliderm3controller(model, view);
+    var model = new Model(element.dataset);
+    var view = new View(element);
+    new Controller(model, view);
 });

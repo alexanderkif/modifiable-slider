@@ -1,25 +1,9 @@
 
 import { bind } from 'decko';
+import EventObserver from './EventObserver';
+const TIME_PERIOD = 50;
 
-class EventObserver {
-    constructor () {
-      this.observers = []
-    }
-  
-    subscribe (fn) {
-      this.observers.push(fn)
-    }
-  
-    unsubscribe (fn) {
-      this.observers = this.observers.filter(subscriber => subscriber !== fn)
-    }
-  
-    broadcast (data) {
-      this.observers.forEach(subscriber => subscriber(data))
-    }
-}
-
-class Sliderm3view extends EventObserver {
+export default class View extends EventObserver {
     constructor(element) {
         super();
         this.div = element;
@@ -29,14 +13,14 @@ class Sliderm3view extends EventObserver {
         this.div.onselectstart = function() {return false;};
         this.draw();
         this.div.addEventListener('draw', this.draw);
-        document.addEventListener('mouseup', this.sliderm3CancelMove);
+        document.addEventListener('mouseup', this.cancelMove);
         this.activePoint = 0;
-        window.addEventListener('resize', this.sliderm3ResizeThrottler);
-        this.div.addEventListener('refreshSliderm3', this.draw);
+        window.addEventListener('resize', this.resizeThrottler);
+        this.div.addEventListener('refreshView', this.draw);
     }
     
     @bind
-    sliderm3MouseDownListener(e) {
+    mouseDownListener(e) {
         var lessThanPoint2;
         if (this.div.dataset.vertical) {
             lessThanPoint2 = e.clientY > this.getCoords(this.point2Div).top + +this.div.dataset.pointSize;
@@ -48,7 +32,7 @@ class Sliderm3view extends EventObserver {
             this.activePoint = 1;
         else
             this.activePoint = 2;
-        document.addEventListener('mousemove', this.sliderm3MouseMoveListener);
+        document.addEventListener('mousemove', this.mouseMoveListener);
         this.broadcast({newValue: this.countNewValue(e), activePoint: this.activePoint});
     }
 
@@ -70,24 +54,24 @@ class Sliderm3view extends EventObserver {
     }
     
     @bind
-    sliderm3MouseMoveListener(e) {
+    mouseMoveListener(e) {
         if (this.activePoint != 0)
             this.broadcast({newValue: this.countNewValue(e), activePoint: this.activePoint});
     }
 
     @bind
-    sliderm3CancelMove() {
+    cancelMove() {
         this.activePoint = 0;
-        document.removeEventListener('mousemove', this.sliderm3MouseMoveListener);
+        document.removeEventListener('mousemove', this.mouseMoveListener);
     }
 
     @bind
-    sliderm3ResizeThrottler() {
+    resizeThrottler() {
         if ( !this.resizeTimeout ) {
             this.resizeTimeout = setTimeout(function() {
                 this.resizeTimeout = null;
                 this.draw();
-            }.bind(this), 66);
+            }.bind(this), TIME_PERIOD);
         }
     }
     
@@ -116,7 +100,7 @@ class Sliderm3view extends EventObserver {
         this.lineDiv.style.borderRadius = `${this.model.lineHeight / 2}px`;
         this.lineDiv.style.backgroundColor = this.model.colorLine;
         this.div.appendChild(this.lineDiv); 
-        this.lineDiv.addEventListener('mousedown', this.sliderm3MouseDownListener);
+        this.lineDiv.addEventListener('mousedown', this.mouseDownListener);
     };
     
     @bind
@@ -259,5 +243,3 @@ class Sliderm3view extends EventObserver {
         }
     };
 }
-
-export default Sliderm3view;
