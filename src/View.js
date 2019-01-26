@@ -97,8 +97,8 @@ export default class View extends EventObserver {
         this.drawLine();
         if (this.model.scale) this.drawScale();
         this.drawRange();
-        if (this.model.interval) this.drawPoint1();
-        this.drawPoint2();
+        if (this.model.interval) this.drawStartPoint();
+        this.drawEndPoint();
     };
     
     @bind
@@ -195,7 +195,7 @@ export default class View extends EventObserver {
     };
     
     @bind
-    drawPoint1() {
+    drawStartPoint() {
         this.point1Div = document.createElement("div");
         this.point1Div.className = "sliderm3__point";
         this.point1Div.style.height = this.point1Div.style.width = `${this.model.pointSize}px`;
@@ -213,7 +213,7 @@ export default class View extends EventObserver {
     };
     
     @bind
-    drawPoint2() {
+    drawEndPoint() {
         this.point2Div = document.createElement("div");
         this.point2Div.className = "sliderm3__point";
         this.point2Div.style.height = this.point2Div.style.width = `${this.model.pointSize}px`;
