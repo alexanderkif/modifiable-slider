@@ -4,21 +4,17 @@ export default class Controller {
     constructor(model, view) {
         this.model = model;
         this.view = view;
-        this.view.subscribe(data => this.changeRange(data.model, data.activePoint));
-        this.toDraw();
+        this.view.subscribe(data => this.changeRange(data));
+        this.model.subscribe(data => {
+            Object.assign(this.view.element.dataset, data.model);
+            this.view.draw();
+        });
     }
 
     @bind
-    changeRange(model, activePoint) {
-        Object.assign(this.model, model);
-        if (activePoint == 1) this.model.setStartRange(model.startRange);
-        if (activePoint == 2) this.model.setEndRange(model.endRange);
-        this.toDraw();
-    }
-
-    @bind
-    toDraw() {
-        Object.assign(this.view.element.dataset, this.model);
-        this.view.draw();
+    changeRange(data) {
+        if (data.refreshModel) Object.assign(this.model, data.refreshModel);
+        if (data.setStartRange) this.model.setStartRange(data.setStartRange.startRange);
+        if (data.setEndRange) this.model.setEndRange(data.setEndRange.endRange);
     }
 }

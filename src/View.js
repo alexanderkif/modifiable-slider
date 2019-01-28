@@ -1,7 +1,7 @@
 
 import { bind } from 'decko';
 import EventObserver from './EventObserver';
-const TIME_PERIOD = 50;
+const PERIOD_BETWEEN_REFRESH_WHEN_RESIZING = 50;
 
 export default class View extends EventObserver {
     constructor(element) {
@@ -14,33 +14,34 @@ export default class View extends EventObserver {
         this.draw();
         this.element.addEventListener('draw', this.draw);
         document.addEventListener('mouseup', this.cancelMove);
-        this.activePoint = 0;
+        this.activePoint = "no";
         window.addEventListener('resize', this.resizeThrottler);
         this.element.addEventListener('refreshView', this.refreshView);
     }
     
     @bind
     refreshView() {
-        this.broadcast({model: this.model, activePoint: this.activePoint});
+        this.broadcast({refreshModel: this.model});
         this.draw();
     }
     
     @bind
     mouseDownListener(e) {
-        var lessThanPoint2;
-        if (this.model.vertical) {
-            lessThanPoint2 = e.clientY > this.getCoords(this.point2Div).top + +this.model.pointSize;
-        }
-        else {
-            lessThanPoint2 = e.clientX < this.getCoords(this.point2Div).left;
-        }
-        if (this.model.interval && lessThanPoint2) 
-            this.activePoint = 1;
-        else 
-            this.activePoint = 2;
+        var lessThanEndPoint = this.isEventPositionLessThenEndPoint(e);
+        if (this.model.interval && lessThanEndPoint)
+            this.activePoint = "startPoint";
+        else
+            this.activePoint = "endPoint";
         this.setModelFromEvent(e);
         document.addEventListener('mousemove', this.mouseMoveListener);
-        this.broadcast({model: this.model, activePoint: this.activePoint});
+        this.broadcastChangedPoint();
+    }
+
+    isEventPositionLessThenEndPoint(e) {
+        if (this.model.vertical)
+            return e.clientY > this.getCoords(this.point2Div).top + +this.model.pointSize;
+        else
+            return e.clientX < this.getCoords(this.point2Div).left;
     }
 
     getCoords(elem) {
@@ -52,7 +53,7 @@ export default class View extends EventObserver {
     }
 
     setModelFromEvent(e) {
-        if (this.activePoint == 1) 
+        if (this.activePoint == "startPoint") 
             this.model.startRange = this.getNewValueFromEvent(e);
         else
             this.model.endRange = this.getNewValueFromEvent(e);
@@ -69,15 +70,22 @@ export default class View extends EventObserver {
     
     @bind
     mouseMoveListener(e) {
-        if (this.activePoint != 0) {
+        if (this.activePoint != "no") {
             this.setModelFromEvent(e);
-            this.broadcast({model: this.model, activePoint: this.activePoint});
+            this.broadcastChangedPoint();
         }
+    }
+
+    broadcastChangedPoint() {
+        if (this.activePoint == "startPoint")
+            this.broadcast({ setStartRange: this.model});
+        if (this.activePoint == "endPoint")
+            this.broadcast({ setEndRange: this.model});
     }
 
     @bind
     cancelMove() {
-        this.activePoint = 0;
+        this.activePoint = "no";
         document.removeEventListener('mousemove', this.mouseMoveListener);
     }
 
@@ -87,7 +95,7 @@ export default class View extends EventObserver {
             this.resizeTimeout = setTimeout(function() {
                 this.resizeTimeout = null;
                 this.draw();
-            }.bind(this), TIME_PERIOD);
+            }.bind(this), PERIOD_BETWEEN_REFRESH_WHEN_RESIZING);
         }
     }
     
