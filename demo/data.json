@@ -1,4 +1,5 @@
 {
+    "sliderClass" : "my-awesome-slider-1234",
     "sliders" : [
         {
             "min" : 20, 

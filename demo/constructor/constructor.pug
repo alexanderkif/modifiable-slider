@@ -2,6 +2,7 @@ include ../sliderm3/sliderm3
 include ../tick/tick
 include ../chooseColor/chooseColor
 
+- var dataJson = require('../data.json');
 - var page= 'Sliderm3 constructor'
 
 html
@@ -15,88 +16,88 @@ html
         link(href="sliderm3.css" rel="stylesheet")
         
     body
-        .sliderm3page
-            .sliderm3page__header= page
+        .page
+            .page__header= page
                 a(href="index.html" style="font-size: 20px;text-decoration: none;color: inherit;")     (to demo)
-            .sliderm3page__content
-                .sliderm3page__slider.sliderm3page__slider_1st
+            .page__content
+                .page__slider.page__slider_1st
                     //- sliderm3(min, max, value1, value2, step, intervals, hint, scale, interval, vertical,  
                     //-     verticalSize, lineHeight, pointSize, colorLine, colorPoint, colorScale, colorText) rgb(250, 235, 215, 0.5)
                     +sliderm3(20, 120, 20, 70, 5, 4, 'true', 'true', 'true', '', 420, 25, 50, "rgba(230, 230, 230, 1)", "rgba(231, 87, 53, 1)", "rgba(231, 87, 53, 1)", "rgba(231, 87, 53, 1)", "rgba(255, 255, 255, 0.7843137254901961)")
-                .sliderm3page__inputs
-                    .sliderm3page__inputs-item
-                        .sliderm3page__label ScaleMin
-                        input.sliderm3page__input.sliderm-min
-                    .sliderm3page__inputs-item
-                        .sliderm3page__label ScaleMax
-                        input.sliderm3page__input.sliderm-max
-                    .sliderm3page__inputs-item
-                        .sliderm3page__label StartRange
-                        input.sliderm3page__input.sliderm-start-range
-                    .sliderm3page__inputs-item
-                        .sliderm3page__label EndRange
-                        input.sliderm3page__input.sliderm-end-range
-                    .sliderm3page__inputs-item
-                        .sliderm3page__label Step
-                        input.sliderm3page__input.sliderm-step
-                    .sliderm3page__inputs-item
-                        .sliderm3page__label Scale Intervals
-                        input.sliderm3page__input.sliderm-intervals
-                    .sliderm3page__inputs-item
-                        .sliderm3page__label.sliderm3page__label_shot Hint
+                .page__inputs
+                    .page__inputs-item
+                        .page__label ScaleMin
+                        input.page__input.sliderm-min
+                    .page__inputs-item
+                        .page__label ScaleMax
+                        input.page__input.sliderm-max
+                    .page__inputs-item
+                        .page__label StartRange
+                        input.page__input.sliderm-start-range
+                    .page__inputs-item
+                        .page__label EndRange
+                        input.page__input.sliderm-end-range
+                    .page__inputs-item
+                        .page__label Step
+                        input.page__input.sliderm-step
+                    .page__inputs-item
+                        .page__label Scale Intervals
+                        input.page__input.sliderm-intervals
+                    .page__inputs-item
+                        .page__label.page__label_shot Hint
                         +tick('tick-hint')
-                        .sliderm3page__label.sliderm3page__label_shot Interval
+                        .page__label.page__label_shot Interval
                         +tick('tick-interval')
-                    .sliderm3page__inputs-item
-                        .sliderm3page__label.sliderm3page__label_shot Scale
+                    .page__inputs-item
+                        .page__label.page__label_shot Scale
                         +tick('tick-scale')
-                        .sliderm3page__label.sliderm3page__label_shot Vertical
+                        .page__label.page__label_shot Vertical
                         +tick('tick-vertical')
-                    .sliderm3page__inputs-item
-                        .sliderm3page__label Length
-                        input.sliderm3page__input.sliderm-length
+                    .page__inputs-item
+                        .page__label Length
+                        input.page__input.sliderm-length
                 +chooseColor(231, 87, 53, 255, 231, 87, 53, 255)
-                textarea(rows="5").sliderm3page__result
+                textarea(rows="5").page__result
             hr
-            .sliderm3page__content
-                .sliderm3page__slider.sliderm3page__slider_2nd
+            .page__content
+                .page__slider.page__slider_2nd
                     //- sliderm3(min, max, value1, value2, step, intervals, hint, scale, interval, vertical,  
                     //-     verticalSize, lineHeight, pointSize, colorLine, colorPoint, colorScale, colorText)
                     +sliderm3(0, 1, 0, 0, 1, 1, '', 'true', '', '', 250, 100, 80, "rgba(230, 230, 230, 1)", "rgba(230, 230, 230, 1)", "rgba(200, 100, 200, 1)", "rgba(200, 100, 200, 1)", "rgba(255, 255, 255, 0.7843137254901961)")
-                .sliderm3page__inputs
-                    .sliderm3page__inputs-item
-                        .sliderm3page__label ScaleMin
-                        input.sliderm3page__input.sliderm-min
-                    .sliderm3page__inputs-item
-                        .sliderm3page__label ScaleMax
-                        input.sliderm3page__input.sliderm-max
-                    .sliderm3page__inputs-item
-                        .sliderm3page__label StartRange
-                        input.sliderm3page__input.sliderm-start-range
-                    .sliderm3page__inputs-item
-                        .sliderm3page__label EndRange
-                        input.sliderm3page__input.sliderm-end-range
-                    .sliderm3page__inputs-item
-                        .sliderm3page__label Step
-                        input.sliderm3page__input.sliderm-step
-                    .sliderm3page__inputs-item
-                        .sliderm3page__label Scale Intervals
-                        input.sliderm3page__input.sliderm-intervals
-                    .sliderm3page__inputs-item
-                        .sliderm3page__label.sliderm3page__label_shot Hint
+                .page__inputs
+                    .page__inputs-item
+                        .page__label ScaleMin
+                        input.page__input.sliderm-min
+                    .page__inputs-item
+                        .page__label ScaleMax
+                        input.page__input.sliderm-max
+                    .page__inputs-item
+                        .page__label StartRange
+                        input.page__input.sliderm-start-range
+                    .page__inputs-item
+                        .page__label EndRange
+                        input.page__input.sliderm-end-range
+                    .page__inputs-item
+                        .page__label Step
+                        input.page__input.sliderm-step
+                    .page__inputs-item
+                        .page__label Scale Intervals
+                        input.page__input.sliderm-intervals
+                    .page__inputs-item
+                        .page__label.page__label_shot Hint
                         +tick('tick-hint')
-                        .sliderm3page__label.sliderm3page__label_shot Interval
+                        .page__label.page__label_shot Interval
                         +tick('tick-interval')
-                    .sliderm3page__inputs-item
-                        .sliderm3page__label.sliderm3page__label_shot Scale
+                    .page__inputs-item
+                        .page__label.page__label_shot Scale
                         +tick('tick-scale')
-                        .sliderm3page__label.sliderm3page__label_shot Vertical
+                        .page__label.page__label_shot Vertical
                         +tick('tick-vertical')
-                    .sliderm3page__inputs-item
-                        .sliderm3page__label Length
-                        input.sliderm3page__input.sliderm-length
+                    .page__inputs-item
+                        .page__label Length
+                        input.page__input.sliderm-length
                 +chooseColor(230, 230, 230, 255, 200, 100, 200, 255)
-                textarea(rows="5").sliderm3page__result
+                textarea(rows="5").page__result
 
         script(src="https://code.jquery.com/jquery-1.12.4.js")
         script(src="https://code.jquery.com/ui/1.12.1/jquery-ui.js")

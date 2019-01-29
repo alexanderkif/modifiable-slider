@@ -12,7 +12,6 @@ export default class View extends EventObserver {
         this.element.ondragstart = function() {return false;};
         this.element.onselectstart = function() {return false;};
         this.draw();
-        this.element.addEventListener('draw', this.draw);
         document.addEventListener('mouseup', this.cancelMove);
         this.activePoint = "no";
         window.addEventListener('resize', this.resizeThrottler);
@@ -39,9 +38,9 @@ export default class View extends EventObserver {
 
     isEventPositionLessThenEndPoint(e) {
         if (this.model.vertical)
-            return e.clientY > this.getCoords(this.point2Div).top + +this.model.pointSize;
+            return e.clientY > this.getCoords(this.endPointElement).top + +this.model.pointSize;
         else
-            return e.clientX < this.getCoords(this.point2Div).left;
+            return e.clientX < this.getCoords(this.endPointElement).left;
     }
 
     getCoords(elem) {
@@ -62,9 +61,9 @@ export default class View extends EventObserver {
     getNewValueFromEvent(e) {
         var differenceInPixels;
         if (this.model.vertical)
-            differenceInPixels = this.lineDiv.offsetHeight - (e.clientY - this.getCoords(this.lineDiv).top + +this.model.lineHeight/2);
+            differenceInPixels = this.lineElement.offsetHeight - (e.clientY - this.getCoords(this.lineElement).top + +this.model.lineHeight/2);
         else
-            differenceInPixels = e.clientX - this.getCoords(this.lineDiv).left - +this.model.lineHeight/2;        
+            differenceInPixels = e.clientX - this.getCoords(this.lineElement).left - +this.model.lineHeight/2;        
         return this.model.step * Math.round((+this.model.min + differenceInPixels * this.range / this.rangeMaxWidth) / this.model.step);
     }
     
@@ -101,7 +100,7 @@ export default class View extends EventObserver {
     
     @bind
     draw() {
-        if (this.lineDiv) this.lineDiv.remove();
+        if (this.lineElement) this.lineElement.remove();
         this.drawLine();
         if (this.model.scale) this.drawScale();
         this.drawRange();
@@ -111,159 +110,159 @@ export default class View extends EventObserver {
     
     @bind
     drawLine() {
-        this.lineDiv = document.createElement("div");
-        this.lineDiv.className = "sliderm3__line";
+        this.lineElement = document.createElement("div");
+        this.lineElement.className = "sliderm3__line";
         if (this.model.vertical) {
-            this.lineDiv.style.height = this.model.length;
+            this.lineElement.style.height = this.model.length;
             this.element.style.maxWidth = `${this.model.lineHeight}px`;
         }
         else {
-            this.lineDiv.style.height = `${this.model.lineHeight}px`;
+            this.lineElement.style.height = `${this.model.lineHeight}px`;
             this.element.style.maxWidth = this.model.length;
         }
-        this.lineDiv.style.borderRadius = `${this.model.lineHeight / 2}px`;
-        this.lineDiv.style.backgroundColor = this.model.colorLine;
-        this.element.appendChild(this.lineDiv); 
-        this.lineDiv.addEventListener('mousedown', this.mouseDownListener);
+        this.lineElement.style.borderRadius = `${this.model.lineHeight / 2}px`;
+        this.lineElement.style.backgroundColor = this.model.colorLine;
+        this.element.appendChild(this.lineElement); 
+        this.lineElement.addEventListener('mousedown', this.mouseDownListener);
     };
     
     @bind
     drawScale() {
-        this.scaleDiv = document.createElement("ul");
-        this.scaleDiv.className = "sliderm3__scale";
-        this.scaleDiv.style.fontSize = `${this.model.pointSize * 3 / 6}px`;
-        this.scaleDiv.style.color = this.model.colorScale;
-        this.lineDiv.appendChild(this.scaleDiv);
+        this.scaleElement = document.createElement("ul");
+        this.scaleElement.className = "sliderm3__scale";
+        this.scaleElement.style.fontSize = `${this.model.pointSize * 3 / 6}px`;
+        this.scaleElement.style.color = this.model.colorScale;
+        this.lineElement.appendChild(this.scaleElement);
         if (this.model.vertical) {
-            this.scaleDiv.style.flexDirection = 'column-reverse';
-            this.scaleDiv.style.left = `${+this.model.pointSize > +this.model.lineHeight? +this.model.lineHeight + (+this.model.pointSize - +this.model.lineHeight)/2 + 5: +this.model.lineHeight + 5}px`;
-            this.scaleDiv.style.height = `${+this.lineDiv.offsetHeight}px`;
+            this.scaleElement.style.flexDirection = 'column-reverse';
+            this.scaleElement.style.left = `${+this.model.pointSize > +this.model.lineHeight? +this.model.lineHeight + (+this.model.pointSize - +this.model.lineHeight)/2 + 5: +this.model.lineHeight + 5}px`;
+            this.scaleElement.style.height = `${+this.lineElement.offsetHeight}px`;
         }
         else {
-            this.scaleDiv.style.top = `${+this.model.pointSize > +this.model.lineHeight? +this.model.lineHeight + (+this.model.pointSize - +this.model.lineHeight)/2 + 5: +this.model.lineHeight + 5}px`;
-            this.scaleDiv.style.width = `${+this.lineDiv.offsetWidth}px`;
+            this.scaleElement.style.top = `${+this.model.pointSize > +this.model.lineHeight? +this.model.lineHeight + (+this.model.pointSize - +this.model.lineHeight)/2 + 5: +this.model.lineHeight + 5}px`;
+            this.scaleElement.style.width = `${+this.lineElement.offsetWidth}px`;
         }
         var digit;
         for(var i = 0; i <= this.model.intervals; i++) {
             digit = document.createElement('li');
             digit.style.listStyleType = 'none';
             digit.innerHTML = Math.round( +this.model.min + (this.model.max - this.model.min) * i / this.model.intervals);
-            this.scaleDiv.appendChild(digit);
+            this.scaleElement.appendChild(digit);
         }
     };
     
     @bind
     drawRange() {
-        if (this.model.vertical) this.rangeMaxWidth = this.lineDiv.offsetHeight - this.model.lineHeight;
-        else this.rangeMaxWidth = this.lineDiv.offsetWidth - this.model.lineHeight;
+        if (this.model.vertical) this.rangeMaxWidth = this.lineElement.offsetHeight - this.model.lineHeight;
+        else this.rangeMaxWidth = this.lineElement.offsetWidth - this.model.lineHeight;
         this.range = this.model.max - this.model.min;
-        this.rangeDiv = document.createElement("div");
-        this.rangeDiv.className = "sliderm3__range";
+        this.rangeElement = document.createElement("div");
+        this.rangeElement.className = "sliderm3__range";
         if (this.model.interval) {
             var long = (this.model.endRange - this.model.startRange) * this.rangeMaxWidth / this.range;
             var startline = (this.model.startRange - this.model.min) * this.rangeMaxWidth / this.range;
             if (this.model.vertical) {
-                this.rangeDiv.style.height = `${long}px`;
-                this.rangeDiv.style.top = `${this.rangeMaxWidth - long - startline + this.model.lineHeight / 2}px`;
+                this.rangeElement.style.height = `${long}px`;
+                this.rangeElement.style.top = `${this.rangeMaxWidth - long - startline + this.model.lineHeight / 2}px`;
             } 
             else {
-                this.rangeDiv.style.width = `${long}px`;
-                this.rangeDiv.style.left = `${startline + this.model.lineHeight / 2}px`;
+                this.rangeElement.style.width = `${long}px`;
+                this.rangeElement.style.left = `${startline + this.model.lineHeight / 2}px`;
             }
         }
         else {
             var long = (this.model.endRange - this.model.min) * this.rangeMaxWidth / this.range;
             if (this.model.vertical) {
-                this.rangeDiv.style.height = `${long}px`;
-                this.rangeDiv.style.top = `${this.rangeMaxWidth - long + this.model.lineHeight / 2}px`;
+                this.rangeElement.style.height = `${long}px`;
+                this.rangeElement.style.top = `${this.rangeMaxWidth - long + this.model.lineHeight / 2}px`;
             }
             else {
-                this.rangeDiv.style.width = `${long}px`;
-                this.rangeDiv.style.left = `${this.model.lineHeight / 2}px`;
+                this.rangeElement.style.width = `${long}px`;
+                this.rangeElement.style.left = `${this.model.lineHeight / 2}px`;
             }
         }
-        this.lineDiv.appendChild(this.rangeDiv);
+        this.lineElement.appendChild(this.rangeElement);
 
         this.pointRange = document.createElement("div");
         this.pointRange.className = "sliderm3__point-range";
         if (this.model.vertical) {
             this.pointRange.style.width = `${this.model.lineHeight}px`;
-            var height = +this.rangeDiv.offsetHeight + +this.model.lineHeight;
+            var height = +this.rangeElement.offsetHeight + +this.model.lineHeight;
             this.pointRange.style.height = `${height}px`;
             this.pointRange.style.top = `${ -this.model.lineHeight/2}px`;
         }
         else {
             this.pointRange.style.height = `${this.model.lineHeight}px`;
-            this.pointRange.style.width = `${+this.rangeDiv.offsetWidth + +this.model.lineHeight}px`;
+            this.pointRange.style.width = `${+this.rangeElement.offsetWidth + +this.model.lineHeight}px`;
             this.pointRange.style.left = `${ -this.model.lineHeight/2}px`;
         }
         this.pointRange.style.borderRadius = `${this.model.lineHeight/2}px`;
         this.pointRange.style.backgroundColor = this.model.colorRange;
-        this.rangeDiv.appendChild(this.pointRange);
+        this.rangeElement.appendChild(this.pointRange);
     };
     
     @bind
     drawStartPoint() {
-        this.point1Div = document.createElement("div");
-        this.point1Div.className = "sliderm3__point";
-        this.point1Div.style.height = this.point1Div.style.width = `${this.model.pointSize}px`;
+        this.startPointElement = document.createElement("div");
+        this.startPointElement.className = "sliderm3__point";
+        this.startPointElement.style.height = this.startPointElement.style.width = `${this.model.pointSize}px`;
         if (this.model.vertical) {
-            this.point1Div.style.top = `${this.rangeDiv.offsetHeight - this.model.pointSize/2}px`;
-            this.point1Div.style.left = `${this.model.lineHeight/2 - this.model.pointSize/2}px`;
+            this.startPointElement.style.top = `${this.rangeElement.offsetHeight - this.model.pointSize/2}px`;
+            this.startPointElement.style.left = `${this.model.lineHeight/2 - this.model.pointSize/2}px`;
         }
         else {
-            this.point1Div.style.top = `${this.lineDiv.offsetHeight/2 - this.model.pointSize/2}px`;
-            this.point1Div.style.left = `${ -this.model.pointSize/2}px`;
+            this.startPointElement.style.top = `${this.lineElement.offsetHeight/2 - this.model.pointSize/2}px`;
+            this.startPointElement.style.left = `${ -this.model.pointSize/2}px`;
         }
-        this.point1Div.style.backgroundColor = this.model.colorPoint;
-        this.rangeDiv.appendChild(this.point1Div);
-        if (this.model.hint) this.drawHint(this.point1Div, this.model.startRange);
+        this.startPointElement.style.backgroundColor = this.model.colorPoint;
+        this.rangeElement.appendChild(this.startPointElement);
+        if (this.model.hint) this.drawHint(this.startPointElement, this.model.startRange);
     };
     
     @bind
     drawEndPoint() {
-        this.point2Div = document.createElement("div");
-        this.point2Div.className = "sliderm3__point";
-        this.point2Div.style.height = this.point2Div.style.width = `${this.model.pointSize}px`;
+        this.endPointElement = document.createElement("div");
+        this.endPointElement.className = "sliderm3__point";
+        this.endPointElement.style.height = this.endPointElement.style.width = `${this.model.pointSize}px`;
         if (this.model.vertical) {
-            this.point2Div.style.top = `${ -this.model.pointSize/2}px`;
-            this.point2Div.style.left = `${this.model.lineHeight/2 - this.model.pointSize/2}px`;
+            this.endPointElement.style.top = `${ -this.model.pointSize/2}px`;
+            this.endPointElement.style.left = `${this.model.lineHeight/2 - this.model.pointSize/2}px`;
         }
         else {
-            this.point2Div.style.top = `${this.lineDiv.offsetHeight/2 - this.model.pointSize/2}px`;
-            this.point2Div.style.left = `${this.rangeDiv.offsetWidth - this.model.pointSize/2}px`;
+            this.endPointElement.style.top = `${this.lineElement.offsetHeight/2 - this.model.pointSize/2}px`;
+            this.endPointElement.style.left = `${this.rangeElement.offsetWidth - this.model.pointSize/2}px`;
         }
-        this.point2Div.style.backgroundColor = this.model.colorPoint;
-        this.rangeDiv.appendChild(this.point2Div);
-        if (this.model.hint) this.drawHint(this.point2Div, this.model.endRange);
+        this.endPointElement.style.backgroundColor = this.model.colorPoint;
+        this.rangeElement.appendChild(this.endPointElement);
+        if (this.model.hint) this.drawHint(this.endPointElement, this.model.endRange);
     };
 
     @bind
     drawHint(div, value) {
-        this.hintDiv = document.createElement("div");
-        this.hintDiv.className = "sliderm3__hint";
-        this.hintDiv.style.height = `${this.model.pointSize}px`;
-        this.hintDiv.style.fontSize = `${this.model.pointSize * 4 / 6}px`;
-        this.hintDiv.style.color = this.model.colorText;
-        this.hintDiv.innerHTML = Math.round(value * 100) / 100;
-        div.appendChild(this.hintDiv);
+        this.hintElement = document.createElement("div");
+        this.hintElement.className = "sliderm3__hint";
+        this.hintElement.style.height = `${this.model.pointSize}px`;
+        this.hintElement.style.fontSize = `${this.model.pointSize * 4 / 6}px`;
+        this.hintElement.style.color = this.model.colorText;
+        this.hintElement.innerHTML = Math.round(value * 100) / 100;
+        div.appendChild(this.hintElement);
         
-        this.arrowDiv = document.createElement("div");
-        this.arrowDiv.className = "sliderm3__arrow";  
-        this.arrowDiv.style.height = `${this.model.pointSize/3}px`;
-        this.arrowDiv.style.width = `${this.model.pointSize/3}px`;
-        this.hintDiv.appendChild(this.arrowDiv);
+        this.arrowElement = document.createElement("div");
+        this.arrowElement.className = "sliderm3__arrow";  
+        this.arrowElement.style.height = `${this.model.pointSize/3}px`;
+        this.arrowElement.style.width = `${this.model.pointSize/3}px`;
+        this.hintElement.appendChild(this.arrowElement);
 
         if (this.model.vertical) {
-            this.hintDiv.style.left = `${-this.model.pointSize/2 - this.hintDiv.offsetWidth}px`;
-            this.hintDiv.style.top = `${this.model.pointSize/2 - this.hintDiv.offsetHeight/2}px`;
-            this.arrowDiv.style.top = `${this.hintDiv.offsetHeight/2 - this.arrowDiv.offsetHeight/2}px`;
-            this.arrowDiv.style.left = `${this.hintDiv.offsetWidth - this.arrowDiv.offsetWidth/2 - 1}px`;
+            this.hintElement.style.left = `${-this.model.pointSize/2 - this.hintElement.offsetWidth}px`;
+            this.hintElement.style.top = `${this.model.pointSize/2 - this.hintElement.offsetHeight/2}px`;
+            this.arrowElement.style.top = `${this.hintElement.offsetHeight/2 - this.arrowElement.offsetHeight/2}px`;
+            this.arrowElement.style.left = `${this.hintElement.offsetWidth - this.arrowElement.offsetWidth/2 - 1}px`;
         } else {
-            this.hintDiv.style.top = `${-this.model.pointSize/2 - this.hintDiv.offsetHeight}px`;
-            this.hintDiv.style.left = `${this.model.pointSize/2 - this.hintDiv.offsetWidth/2}px`;
-            this.arrowDiv.style.top = `${this.hintDiv.offsetHeight - this.arrowDiv.offsetHeight/2 - 1}px`;
-            this.arrowDiv.style.left = `${this.hintDiv.offsetWidth/2 - this.arrowDiv.offsetWidth/2}px`;
+            this.hintElement.style.top = `${-this.model.pointSize/2 - this.hintElement.offsetHeight}px`;
+            this.hintElement.style.left = `${this.model.pointSize/2 - this.hintElement.offsetWidth/2}px`;
+            this.arrowElement.style.top = `${this.hintElement.offsetHeight - this.arrowElement.offsetHeight/2 - 1}px`;
+            this.arrowElement.style.left = `${this.hintElement.offsetWidth/2 - this.arrowElement.offsetWidth/2}px`;
         }
     };
 }

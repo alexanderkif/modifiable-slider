@@ -1,4 +1,6 @@
 import "./sliderm3.scss";
 import Slider from "./Slider";
 
-[].forEach.call(document.getElementsByClassName('sliderm3'), element => new Slider(element));
+var dataJson = require('../demo/data.json');
+
+[].forEach.call(document.getElementsByClassName(dataJson.sliderClass), element => new Slider(element));
