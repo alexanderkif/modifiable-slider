@@ -55,4 +55,11 @@ describe('Model tests', function(){
         model.setEndRange(22);
         assert.equal(model.endRange, 20);
     });
+
+    it('broadcastModelChanged check broadcast', function(){
+        var brdcst = false;
+        model.subscribe(data => brdcst = true);
+        model.broadcastModelChanged();
+        assert(brdcst);
+    });
 })
