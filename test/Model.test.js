@@ -57,9 +57,9 @@ describe('Model tests', function(){
     });
 
     it('broadcastModelChanged check broadcast', function(){
-        var brdcst = false;
-        model.subscribe(data => brdcst = true);
-        model.broadcastModelChanged();
-        assert(brdcst);
+        var brdcst = '';
+        model.subscribe(data => brdcst = data.description);
+        model.broadcastModelChanged('check');
+        assert.equal(brdcst, 'check');
     });
 })
