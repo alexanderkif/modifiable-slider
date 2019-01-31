@@ -11,7 +11,7 @@ export default class View extends EventObserver {
         this.element.oncontextmenu = function() {return false;};    
         this.element.ondragstart = function() {return false;};
         this.element.onselectstart = function() {return false;};
-        this.draw();
+        this.refreshSlider();
         document.addEventListener('mouseup', this.cancelMove);
         this.activePoint = "no";
         window.addEventListener('resize', this.resizeThrottler);
@@ -21,7 +21,7 @@ export default class View extends EventObserver {
     @bind
     refreshView() {
         this.broadcast({refreshModel: this.model});
-        this.draw();
+        this.refreshSlider();
     }
     
     @bind
@@ -93,13 +93,13 @@ export default class View extends EventObserver {
         if ( !this.resizeTimeout ) {
             this.resizeTimeout = setTimeout(function() {
                 this.resizeTimeout = null;
-                this.draw();
+                this.refreshSlider();
             }.bind(this), PERIOD_BETWEEN_REFRESH_WHEN_RESIZING);
         }
     }
     
     @bind
-    draw() {
+    refreshSlider() {
         if (this.lineElement) this.lineElement.remove();
         this.drawLine();
         if (this.model.scale) this.drawScale();
@@ -158,13 +158,26 @@ export default class View extends EventObserver {
         this.range = this.model.max - this.model.min;
         this.rangeElement = document.createElement("div");
         this.rangeElement.className = "sliderm3__range";
+        this.countRangeElement();
+        this.lineElement.appendChild(this.rangeElement);
+
+        this.pointRange = document.createElement("div");
+        this.pointRange.className = "sliderm3__point-range";
+        this.countPointRangeElement();
+        this.pointRange.style.borderRadius = `${this.model.lineHeight/2}px`;
+        this.pointRange.style.backgroundColor = this.model.colorRange;
+        this.rangeElement.appendChild(this.pointRange);
+    };
+
+    @bind
+    countRangeElement() {
         if (this.model.interval) {
             var long = (this.model.endRange - this.model.startRange) * this.rangeMaxWidth / this.range;
             var startline = (this.model.startRange - this.model.min) * this.rangeMaxWidth / this.range;
             if (this.model.vertical) {
                 this.rangeElement.style.height = `${long}px`;
-                this.rangeElement.style.top = `${this.rangeMaxWidth - long - startline + this.model.lineHeight / 2}px`;
-            } 
+                this.rangeElement.style.top = `${this.rangeMaxWidth - long + this.model.lineHeight / 2 - startline}px`;
+            }
             else {
                 this.rangeElement.style.width = `${long}px`;
                 this.rangeElement.style.left = `${startline + this.model.lineHeight / 2}px`;
@@ -181,61 +194,78 @@ export default class View extends EventObserver {
                 this.rangeElement.style.left = `${this.model.lineHeight / 2}px`;
             }
         }
-        this.lineElement.appendChild(this.rangeElement);
-
-        this.pointRange = document.createElement("div");
-        this.pointRange.className = "sliderm3__point-range";
+    }
+    
+    @bind
+    countPointRangeElement() {
         if (this.model.vertical) {
             this.pointRange.style.width = `${this.model.lineHeight}px`;
             var height = +this.rangeElement.offsetHeight + +this.model.lineHeight;
             this.pointRange.style.height = `${height}px`;
-            this.pointRange.style.top = `${ -this.model.lineHeight/2}px`;
+            this.pointRange.style.top = `${-this.model.lineHeight / 2}px`;
         }
         else {
             this.pointRange.style.height = `${this.model.lineHeight}px`;
             this.pointRange.style.width = `${+this.rangeElement.offsetWidth + +this.model.lineHeight}px`;
-            this.pointRange.style.left = `${ -this.model.lineHeight/2}px`;
+            this.pointRange.style.left = `${-this.model.lineHeight / 2}px`;
         }
-        this.pointRange.style.borderRadius = `${this.model.lineHeight/2}px`;
-        this.pointRange.style.backgroundColor = this.model.colorRange;
-        this.rangeElement.appendChild(this.pointRange);
-    };
-    
+    }
+
     @bind
     drawStartPoint() {
         this.startPointElement = document.createElement("div");
         this.startPointElement.className = "sliderm3__point";
         this.startPointElement.style.height = this.startPointElement.style.width = `${this.model.pointSize}px`;
-        if (this.model.vertical) {
-            this.startPointElement.style.top = `${this.rangeElement.offsetHeight - this.model.pointSize/2}px`;
-            this.startPointElement.style.left = `${this.model.lineHeight/2 - this.model.pointSize/2}px`;
-        }
-        else {
-            this.startPointElement.style.top = `${this.lineElement.offsetHeight/2 - this.model.pointSize/2}px`;
-            this.startPointElement.style.left = `${ -this.model.pointSize/2}px`;
-        }
+        this.countStartPointElementTop();
+        this.countStartPointElementLeft();
         this.startPointElement.style.backgroundColor = this.model.colorPoint;
-        this.rangeElement.appendChild(this.startPointElement);
+        this.lineElement.appendChild(this.startPointElement);
         if (this.model.hint) this.drawHint(this.startPointElement, this.model.startRange);
     };
     
+    @bind
+    countStartPointElementTop() {
+        if (this.model.vertical)
+            this.startPointElement.style.top = `${this.rangeElement.offsetTop + this.rangeElement.offsetHeight - this.model.pointSize / 2}px`;
+        else
+            this.startPointElement.style.top = `${this.lineElement.offsetHeight / 2 - this.model.pointSize / 2}px`;
+    }
+    
+    @bind
+    countStartPointElementLeft() {
+        if (this.model.vertical)
+            this.startPointElement.style.left = `${this.model.lineHeight / 2 - this.model.pointSize / 2}px`;
+        else
+            this.startPointElement.style.left = `${this.rangeElement.offsetLeft - this.model.pointSize / 2}px`;
+    }
+
     @bind
     drawEndPoint() {
         this.endPointElement = document.createElement("div");
         this.endPointElement.className = "sliderm3__point";
         this.endPointElement.style.height = this.endPointElement.style.width = `${this.model.pointSize}px`;
-        if (this.model.vertical) {
-            this.endPointElement.style.top = `${ -this.model.pointSize/2}px`;
-            this.endPointElement.style.left = `${this.model.lineHeight/2 - this.model.pointSize/2}px`;
-        }
-        else {
-            this.endPointElement.style.top = `${this.lineElement.offsetHeight/2 - this.model.pointSize/2}px`;
-            this.endPointElement.style.left = `${this.rangeElement.offsetWidth - this.model.pointSize/2}px`;
-        }
+        this.countEndPointElementTop();
+        this.countEndPointElementLeft();
         this.endPointElement.style.backgroundColor = this.model.colorPoint;
-        this.rangeElement.appendChild(this.endPointElement);
+        this.lineElement.appendChild(this.endPointElement);
         if (this.model.hint) this.drawHint(this.endPointElement, this.model.endRange);
     };
+
+    @bind
+    countEndPointElementTop() {
+        if (this.model.vertical)
+            this.endPointElement.style.top = `${this.rangeElement.offsetTop - this.model.pointSize/2}px`;
+        else 
+            this.endPointElement.style.top = `${this.lineElement.offsetHeight/2 - this.model.pointSize/2}px`;
+    };
+
+    @bind
+    countEndPointElementLeft() {
+        if (this.model.vertical)
+            this.endPointElement.style.left = `${this.model.lineHeight / 2 - this.model.pointSize / 2}px`;
+        else
+            this.endPointElement.style.left = `${this.rangeElement.offsetLeft + this.rangeElement.offsetWidth - this.model.pointSize / 2}px`;
+    }
 
     @bind
     drawHint(div, value) {

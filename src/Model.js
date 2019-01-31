@@ -11,7 +11,7 @@ export default class Model extends EventObserver {
     setStartRange(newValue) {
         this.startRange = newValue;
         this.checkStartRange();
-        this.broadcastModelChanged();
+        this.broadcastModelChanged('changedStartRange');
     }
 
     @bind
@@ -26,7 +26,7 @@ export default class Model extends EventObserver {
     setEndRange(newValue) {
         this.endRange = newValue;
         this.checkEndRange();
-        this.broadcastModelChanged();
+        this.broadcastModelChanged('changedEndRange');
     }
 
     @bind
@@ -39,9 +39,9 @@ export default class Model extends EventObserver {
             this.endRange = this.max;
     }
 
-    broadcastModelChanged() {
+    broadcastModelChanged(description) {
         var model = Object.assign({}, this);
         delete model.observers;
-        this.broadcast({ model: model });
+        this.broadcast({ description: description, model: model });
     }
 }

@@ -7,7 +7,20 @@ export default class Controller {
         this.view.subscribe(data => this.changeRange(data));
         this.model.subscribe(data => {
             Object.assign(this.view.element.dataset, data.model);
-            this.view.draw();
+            if(data.description){
+                if(data.description == 'changedStartRange') {
+                    this.view.countRangeElement();
+                    this.view.countPointRangeElement();
+                    this.view.countStartPointElementTop();
+                    this.view.countStartPointElementLeft();
+                }
+                if(data.description == 'changedEndRange') {
+                    this.view.countRangeElement();
+                    this.view.countPointRangeElement();
+                    this.view.countEndPointElementTop();
+                    this.view.countEndPointElementLeft();
+                }
+            }
         });
     }
 
