@@ -1,7 +1,7 @@
 
 import { bind } from 'decko';
 import EventObserver from './EventObserver';
-const PERIOD_BETWEEN_REFRESH_WHEN_RESIZING = 50;
+const THROTTLE_THRESHOLD = 50;
 
 export default class View extends EventObserver {
     constructor(element) {
@@ -94,7 +94,7 @@ export default class View extends EventObserver {
             this.resizeTimeout = setTimeout(function() {
                 this.resizeTimeout = null;
                 this.refreshSlider();
-            }.bind(this), PERIOD_BETWEEN_REFRESH_WHEN_RESIZING);
+            }.bind(this), THROTTLE_THRESHOLD);
         }
     }
     
@@ -106,6 +106,26 @@ export default class View extends EventObserver {
         this.drawRange();
         if (this.model.interval) this.drawStartPoint();
         this.drawEndPoint();
+    };
+    
+    @bind
+    changeStartRange() {
+        this.changeRange();
+        this.countStartPointElementTop();
+        this.countStartPointElementLeft();
+    };
+    
+    @bind
+    changeEndRange() {
+        this.changeRange();
+        this.countEndPointElementTop();
+        this.countEndPointElementLeft();
+    };
+    
+    @bind
+    changeRange() {
+        this.countRangeElement();
+        this.countPointRangeElement();
     };
     
     @bind

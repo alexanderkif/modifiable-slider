@@ -8,18 +8,10 @@ export default class Controller {
         this.model.subscribe(data => {
             Object.assign(this.view.element.dataset, data.model);
             if(data.description){
-                if(data.description == 'changedStartRange') {
-                    this.view.countRangeElement();
-                    this.view.countPointRangeElement();
-                    this.view.countStartPointElementTop();
-                    this.view.countStartPointElementLeft();
-                }
-                if(data.description == 'changedEndRange') {
-                    this.view.countRangeElement();
-                    this.view.countPointRangeElement();
-                    this.view.countEndPointElementTop();
-                    this.view.countEndPointElementLeft();
-                }
+                if(data.description == 'changedStartRange')
+                    this.view.changeStartRange();
+                if(data.description == 'changedEndRange')
+                    this.view.changeEndRange();
             }
         });
     }
