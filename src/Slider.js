@@ -1,4 +1,4 @@
-
+import "./sliderm3.scss";
 import Model from './Model';
 import View from './View';
 import Controller from './Controller';
