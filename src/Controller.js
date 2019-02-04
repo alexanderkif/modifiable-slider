@@ -18,7 +18,7 @@ export default class Controller {
 
     @bind
     changeRange(data) {
-        if (data.refreshModel) Object.assign(this.model, data.refreshModel);
+        if (data.refreshModel) this.model.setModel(data.refreshModel);
         if (data.setStartRange) this.model.setStartRange(data.setStartRange.startRange);
         if (data.setEndRange) this.model.setEndRange(data.setEndRange.endRange);
     }

@@ -1,9 +1,16 @@
 import { bind } from 'decko';
 import EventObserver from './EventObserver';
+import Validate from './Validate';
 
 export default class Model extends EventObserver {
     constructor(dataset) {
         super();
+        this.setModel(dataset);
+    }
+
+    @bind
+    setModel(dataset) {
+        new Validate(dataset);
         Object.assign(this, dataset);
     }
 

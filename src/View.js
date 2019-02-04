@@ -113,6 +113,10 @@ export default class View extends EventObserver {
         this.changeRange();
         this.countStartPointElementTop();
         this.countStartPointElementLeft();
+        if (this.startHintArrow) {
+            this.startHintArrow[0].childNodes[0].nodeValue = Math.round(this.model.startRange * 100) / 100;
+            this.setHintPosition(this.startHintArrow[0], this.startHintArrow[1]);
+        }
     };
     
     @bind
@@ -120,6 +124,10 @@ export default class View extends EventObserver {
         this.changeRange();
         this.countEndPointElementTop();
         this.countEndPointElementLeft();
+        if (this.endHintArrow) {
+            this.endHintArrow[0].childNodes[0].nodeValue = Math.round(this.model.endRange * 100) / 100;
+            this.setHintPosition(this.endHintArrow[0], this.endHintArrow[1]);
+        }
     };
     
     @bind
@@ -240,7 +248,7 @@ export default class View extends EventObserver {
         this.countStartPointElementLeft();
         this.startPointElement.style.backgroundColor = this.model.colorPoint;
         this.lineElement.appendChild(this.startPointElement);
-        if (this.model.hint) this.drawHint(this.startPointElement, this.model.startRange);
+        if (this.model.hint) this.startHintArrow = this.drawHint(this.startPointElement, this.model.startRange);
     };
     
     @bind
@@ -268,7 +276,7 @@ export default class View extends EventObserver {
         this.countEndPointElementLeft();
         this.endPointElement.style.backgroundColor = this.model.colorPoint;
         this.lineElement.appendChild(this.endPointElement);
-        if (this.model.hint) this.drawHint(this.endPointElement, this.model.endRange);
+        if (this.model.hint) this.endHintArrow = this.drawHint(this.endPointElement, this.model.endRange);
     };
 
     @bind
@@ -289,30 +297,37 @@ export default class View extends EventObserver {
 
     @bind
     drawHint(div, value) {
-        this.hintElement = document.createElement("div");
-        this.hintElement.className = "sliderm3__hint";
-        this.hintElement.style.height = `${this.model.pointSize}px`;
-        this.hintElement.style.fontSize = `${this.model.pointSize * 4 / 6}px`;
-        this.hintElement.style.color = this.model.colorText;
-        this.hintElement.innerHTML = Math.round(value * 100) / 100;
-        div.appendChild(this.hintElement);
+        var hintElement = document.createElement("div");
+        hintElement.className = "sliderm3__hint";
+        hintElement.style.height = `${this.model.pointSize}px`;
+        hintElement.style.fontSize = `${this.model.pointSize * 4 / 6}px`;
+        hintElement.style.color = this.model.colorText;
+        hintElement.innerHTML = Math.round(value * 100) / 100;
+        div.appendChild(hintElement);
         
-        this.arrowElement = document.createElement("div");
-        this.arrowElement.className = "sliderm3__arrow";  
-        this.arrowElement.style.height = `${this.model.pointSize/3}px`;
-        this.arrowElement.style.width = `${this.model.pointSize/3}px`;
-        this.hintElement.appendChild(this.arrowElement);
+        var arrowElement = document.createElement("div");
+        arrowElement.className = "sliderm3__arrow";  
+        arrowElement.style.height = `${this.model.pointSize/3}px`;
+        arrowElement.style.width = `${this.model.pointSize/3}px`;
+        hintElement.appendChild(arrowElement);
 
-        if (this.model.vertical) {
-            this.hintElement.style.left = `${-this.model.pointSize/2 - this.hintElement.offsetWidth}px`;
-            this.hintElement.style.top = `${this.model.pointSize/2 - this.hintElement.offsetHeight/2}px`;
-            this.arrowElement.style.top = `${this.hintElement.offsetHeight/2 - this.arrowElement.offsetHeight/2}px`;
-            this.arrowElement.style.left = `${this.hintElement.offsetWidth - this.arrowElement.offsetWidth/2 - 1}px`;
-        } else {
-            this.hintElement.style.top = `${-this.model.pointSize/2 - this.hintElement.offsetHeight}px`;
-            this.hintElement.style.left = `${this.model.pointSize/2 - this.hintElement.offsetWidth/2}px`;
-            this.arrowElement.style.top = `${this.hintElement.offsetHeight - this.arrowElement.offsetHeight/2 - 1}px`;
-            this.arrowElement.style.left = `${this.hintElement.offsetWidth/2 - this.arrowElement.offsetWidth/2}px`;
-        }
+        this.setHintPosition(hintElement, arrowElement);
+        return [hintElement,arrowElement];
     };
+
+    @bind
+    setHintPosition(hintElement, arrowElement) {
+        if (this.model.vertical) {
+            hintElement.style.left = `${-this.model.pointSize / 2 - hintElement.offsetWidth}px`;
+            hintElement.style.top = `${this.model.pointSize / 2 - hintElement.offsetHeight / 2}px`;
+            arrowElement.style.top = `${hintElement.offsetHeight / 2 - arrowElement.offsetHeight / 2}px`;
+            arrowElement.style.left = `${hintElement.offsetWidth - arrowElement.offsetWidth / 2 - 1}px`;
+        }
+        else {
+            hintElement.style.top = `${-this.model.pointSize / 2 - hintElement.offsetHeight}px`;
+            hintElement.style.left = `${this.model.pointSize / 2 - hintElement.offsetWidth / 2}px`;
+            arrowElement.style.top = `${hintElement.offsetHeight - arrowElement.offsetHeight / 2 - 1}px`;
+            arrowElement.style.left = `${hintElement.offsetWidth / 2 - arrowElement.offsetWidth / 2}px`;
+        }
+    }
 }
