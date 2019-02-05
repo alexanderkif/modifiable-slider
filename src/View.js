@@ -15,13 +15,12 @@ export default class View extends EventObserver {
         document.addEventListener('mouseup', this.cancelMove);
         this.activePoint = "no";
         window.addEventListener('resize', this.resizeThrottler);
-        this.element.addEventListener('refreshView', this.refreshView);
+        this.element.addEventListener('refreshModel', this.refreshModel);
     }
     
     @bind
-    refreshView() {
+    refreshModel() {
         this.broadcast({refreshModel: this.model});
-        this.refreshSlider();
     }
     
     @bind

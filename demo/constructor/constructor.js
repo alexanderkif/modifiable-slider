@@ -69,20 +69,20 @@ class PageContent {
     change() {
         this.setInputs();
         this.inputSlidermResult.innerHTML = `${this.div.outerHTML.split('>')[0]}></div><script src=".js"></script>`;
-        this.div.dispatchEvent(new Event('refreshView'));		
+        this.div.dispatchEvent(new Event('refreshModel'));		
     }
 
     @bind
     inputsChange() {
         this.getInputs();
-        this.div.dispatchEvent(new Event('refreshView'));	
+        this.div.dispatchEvent(new Event('refreshModel'));	
     }
 
     @bind
     inputsClick() {
         this.getInputs();
         this.setInputs();		
-        this.div.dispatchEvent(new Event('refreshView'));
+        this.div.dispatchEvent(new Event('refreshModel'));
     }
 
     @bind
@@ -92,7 +92,7 @@ class PageContent {
         this.div.dataset.colorPoint = this.chooseColor2color(this.chooseColorPoint);	
         this.div.dataset.colorScale = this.chooseColor2color(this.chooseColorScale);	
         this.div.dataset.colorText = this.chooseColor2color(this.chooseColorText);
-        this.div.dispatchEvent(new Event('refreshView'));	
+        this.div.dispatchEvent(new Event('refreshModel'));	
         this.inputSlidermResult.innerHTML = `${this.div.outerHTML.split('>')[0]}></div><script src=".js"></script>`;
     };	
 

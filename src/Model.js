@@ -12,6 +12,7 @@ export default class Model extends EventObserver {
     setModel(dataset) {
         new Validate(dataset);
         Object.assign(this, dataset);
+        this.broadcastModelChanged('changedSlider');
     }
 
     @bind
