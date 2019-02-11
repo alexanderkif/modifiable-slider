@@ -1,17 +1,17 @@
 import { bind } from 'decko';
 import EventObserver from './EventObserver';
-import Validate from './Validate';
+import Config from './Config';
 
 export default class Model extends EventObserver {
-    constructor(dataset) {
+    constructor(model) {
         super();
-        this.setModel(dataset);
+        this.setModel(model);
     }
 
     @bind
-    setModel(dataset) {
-        new Validate(dataset);
-        Object.assign(this, dataset);
+    setModel(model) {
+        new Config(model);
+        Object.assign(this, model);
         this.broadcastModelChanged('changedSlider');
     }
 

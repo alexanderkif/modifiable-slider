@@ -7,4 +7,4 @@ import Slider from "../src/Slider";
 console.log("Run...");
 
 var dataJson = require('./data.json');
-[].forEach.call(document.getElementsByClassName(dataJson.sliderClass), element => new Slider(element));
+new Slider(dataJson.sliderClass);

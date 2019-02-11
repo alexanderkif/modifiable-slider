@@ -2,12 +2,12 @@
 import { bind } from 'decko';
 import EventObserver from './EventObserver';
 const THROTTLE_THRESHOLD = 50;
+const MIN_DISTANCE_SLIDER_SCALE = 5;
 
 export default class View extends EventObserver {
     constructor(element) {
         super();
         this.element = element;
-        this.model = this.element.dataset;
         this.element.oncontextmenu = function() {return false;};    
         this.element.ondragstart = function() {return false;};
         this.element.onselectstart = function() {return false;};
@@ -20,24 +20,24 @@ export default class View extends EventObserver {
     
     @bind
     refreshModel() {
-        this.broadcast({refreshModel: this.model});
+        this.broadcast({refreshModel: this.element.dataset});
     }
     
     @bind
     mouseDownListener(e) {
         var lessThanEndPoint = this.isEventPositionLessThenEndPoint(e);
-        if (this.model.interval && lessThanEndPoint)
+        if (this.element.dataset.interval && lessThanEndPoint)
             this.activePoint = "startPoint";
         else
             this.activePoint = "endPoint";
-        this.setModelFromEvent(e);
+        this.setDatasetFromEvent(e);
         document.addEventListener('mousemove', this.mouseMoveListener);
         this.broadcastChangedPoint();
     }
 
     isEventPositionLessThenEndPoint(e) {
-        if (this.model.vertical)
-            return e.clientY > this.getCoords(this.endPointElement).top + +this.model.pointSize;
+        if (this.element.dataset.vertical)
+            return e.clientY > this.getCoords(this.endPointElement).top + +this.element.dataset.pointSize;
         else
             return e.clientX < this.getCoords(this.endPointElement).left;
     }
@@ -50,35 +50,38 @@ export default class View extends EventObserver {
         };
     }
 
-    setModelFromEvent(e) {
+    setDatasetFromEvent(e) {
         if (this.activePoint == "startPoint") 
-            this.model.startRange = this.getNewValueFromEvent(e);
+            this.element.dataset.startRange = this.getNewValueFromEvent(e);
         else
-            this.model.endRange = this.getNewValueFromEvent(e);
+            this.element.dataset.endRange = this.getNewValueFromEvent(e);
     }
 
     getNewValueFromEvent(e) {
         var differenceInPixels;
-        if (this.model.vertical)
-            differenceInPixels = this.lineElement.offsetHeight - (e.clientY - this.getCoords(this.lineElement).top + +this.model.lineHeight/2);
+        if (this.element.dataset.vertical)
+            differenceInPixels = this.lineElement.offsetHeight - 
+                (e.clientY - this.getCoords(this.lineElement).top + +this.element.dataset.lineHeight/2);
         else
-            differenceInPixels = e.clientX - this.getCoords(this.lineElement).left - +this.model.lineHeight/2;        
-        return this.model.step * Math.round((+this.model.min + differenceInPixels * this.range / this.rangeMaxWidth) / this.model.step);
+            differenceInPixels = e.clientX - 
+                this.getCoords(this.lineElement).left - +this.element.dataset.lineHeight/2;        
+        return this.element.dataset.step * Math.round((+this.element.dataset.min + 
+            differenceInPixels * this.range / this.rangeMaxWidth) / this.element.dataset.step);
     }
     
     @bind
     mouseMoveListener(e) {
         if (this.activePoint != "no") {
-            this.setModelFromEvent(e);
+            this.setDatasetFromEvent(e);
             this.broadcastChangedPoint();
         }
     }
 
     broadcastChangedPoint() {
         if (this.activePoint == "startPoint")
-            this.broadcast({ setStartRange: this.model});
+            this.broadcast({ setStartRange: this.element.dataset});
         if (this.activePoint == "endPoint")
-            this.broadcast({ setEndRange: this.model});
+            this.broadcast({ setEndRange: this.element.dataset});
     }
 
     @bind
@@ -101,9 +104,9 @@ export default class View extends EventObserver {
     refreshSlider() {
         if (this.lineElement) this.lineElement.remove();
         this.drawLine();
-        if (this.model.scale) this.drawScale();
+        if (this.element.dataset.scale) this.drawScale();
         this.drawRange();
-        if (this.model.interval) this.drawStartPoint();
+        if (this.element.dataset.interval) this.drawStartPoint();
         this.drawEndPoint();
     };
     
@@ -113,7 +116,7 @@ export default class View extends EventObserver {
         this.countStartPointElementTop();
         this.countStartPointElementLeft();
         if (this.startHintArrow) {
-            this.startHintArrow[0].childNodes[0].nodeValue = Math.round(this.model.startRange * 100) / 100;
+            this.startHintArrow[0].childNodes[0].nodeValue = Math.round(this.element.dataset.startRange * 100) / 100;
             this.setHintPosition(this.startHintArrow[0], this.startHintArrow[1]);
         }
     };
@@ -124,14 +127,14 @@ export default class View extends EventObserver {
         this.countEndPointElementTop();
         this.countEndPointElementLeft();
         if (this.endHintArrow) {
-            this.endHintArrow[0].childNodes[0].nodeValue = Math.round(this.model.endRange * 100) / 100;
+            this.endHintArrow[0].childNodes[0].nodeValue = Math.round(this.element.dataset.endRange * 100) / 100;
             this.setHintPosition(this.endHintArrow[0], this.endHintArrow[1]);
         }
     };
     
     @bind
     changeRange() {
-        this.countRangeElement();
+        this.countRangeElementBandAndIndent();
         this.countPointRangeElement();
     };
     
@@ -139,16 +142,16 @@ export default class View extends EventObserver {
     drawLine() {
         this.lineElement = document.createElement("div");
         this.lineElement.className = "sliderm3__line";
-        if (this.model.vertical) {
-            this.lineElement.style.height = this.model.length;
-            this.element.style.maxWidth = `${this.model.lineHeight}px`;
+        if (this.element.dataset.vertical) {
+            this.lineElement.style.height = this.element.dataset.length;
+            this.element.style.maxWidth = `${this.element.dataset.lineHeight}px`;
         }
         else {
-            this.lineElement.style.height = `${this.model.lineHeight}px`;
-            this.element.style.maxWidth = this.model.length;
+            this.lineElement.style.height = `${this.element.dataset.lineHeight}px`;
+            this.element.style.maxWidth = this.element.dataset.length;
         }
-        this.lineElement.style.borderRadius = `${this.model.lineHeight / 2}px`;
-        this.lineElement.style.backgroundColor = this.model.colorLine;
+        this.lineElement.style.borderRadius = `${this.element.dataset.lineHeight / 2}px`;
+        this.lineElement.style.backgroundColor = this.element.dataset.colorLine;
         this.element.appendChild(this.lineElement); 
         this.lineElement.addEventListener('mousedown', this.mouseDownListener);
     };
@@ -157,84 +160,89 @@ export default class View extends EventObserver {
     drawScale() {
         this.scaleElement = document.createElement("ul");
         this.scaleElement.className = "sliderm3__scale";
-        this.scaleElement.style.fontSize = `${this.model.pointSize * 3 / 6}px`;
-        this.scaleElement.style.color = this.model.colorScale;
+        this.scaleElement.style.fontSize = `${this.element.dataset.pointSize * 3 / 6}px`;
+        this.scaleElement.style.color = this.element.dataset.colorScale;
         this.lineElement.appendChild(this.scaleElement);
-        if (this.model.vertical) {
+        if (this.element.dataset.vertical) {
             this.scaleElement.style.flexDirection = 'column-reverse';
-            this.scaleElement.style.left = `${+this.model.pointSize > +this.model.lineHeight? +this.model.lineHeight + (+this.model.pointSize - +this.model.lineHeight)/2 + 5: +this.model.lineHeight + 5}px`;
+            this.scaleElement.style.left = `${+this.element.dataset.pointSize > +this.element.dataset.lineHeight? 
+                +this.element.dataset.lineHeight + (+this.element.dataset.pointSize - +this.element.dataset.lineHeight)/2 + MIN_DISTANCE_SLIDER_SCALE: 
+                +this.element.dataset.lineHeight + MIN_DISTANCE_SLIDER_SCALE}px`;
             this.scaleElement.style.height = `${+this.lineElement.offsetHeight}px`;
         }
         else {
-            this.scaleElement.style.top = `${+this.model.pointSize > +this.model.lineHeight? +this.model.lineHeight + (+this.model.pointSize - +this.model.lineHeight)/2 + 5: +this.model.lineHeight + 5}px`;
+            this.scaleElement.style.top = `${+this.element.dataset.pointSize > +this.element.dataset.lineHeight? 
+                +this.element.dataset.lineHeight + (+this.element.dataset.pointSize - +this.element.dataset.lineHeight)/2 + MIN_DISTANCE_SLIDER_SCALE: 
+                +this.element.dataset.lineHeight + MIN_DISTANCE_SLIDER_SCALE}px`;
             this.scaleElement.style.width = `${+this.lineElement.offsetWidth}px`;
         }
         var digit;
-        for(var i = 0; i <= this.model.intervals; i++) {
+        for(var i = 0; i <= this.element.dataset.intervals; i++) {
             digit = document.createElement('li');
             digit.style.listStyleType = 'none';
-            digit.innerHTML = Math.round( +this.model.min + (this.model.max - this.model.min) * i / this.model.intervals);
+            digit.innerHTML = Math.round( +this.element.dataset.min + 
+                (this.element.dataset.max - this.element.dataset.min) * i / this.element.dataset.intervals);
             this.scaleElement.appendChild(digit);
         }
     };
     
     @bind
     drawRange() {
-        if (this.model.vertical) this.rangeMaxWidth = this.lineElement.offsetHeight - this.model.lineHeight;
-        else this.rangeMaxWidth = this.lineElement.offsetWidth - this.model.lineHeight;
-        this.range = this.model.max - this.model.min;
+        if (this.element.dataset.vertical) this.rangeMaxWidth = this.lineElement.offsetHeight - this.element.dataset.lineHeight;
+        else this.rangeMaxWidth = this.lineElement.offsetWidth - this.element.dataset.lineHeight;
+        this.range = this.element.dataset.max - this.element.dataset.min;
         this.rangeElement = document.createElement("div");
         this.rangeElement.className = "sliderm3__range";
-        this.countRangeElement();
+        this.countRangeElementBandAndIndent();
         this.lineElement.appendChild(this.rangeElement);
 
         this.pointRange = document.createElement("div");
         this.pointRange.className = "sliderm3__point-range";
         this.countPointRangeElement();
-        this.pointRange.style.borderRadius = `${this.model.lineHeight/2}px`;
-        this.pointRange.style.backgroundColor = this.model.colorRange;
+        this.pointRange.style.borderRadius = `${this.element.dataset.lineHeight/2}px`;
+        this.pointRange.style.backgroundColor = this.element.dataset.colorRange;
         this.rangeElement.appendChild(this.pointRange);
     };
 
     @bind
-    countRangeElement() {
-        if (this.model.interval) {
-            var long = (this.model.endRange - this.model.startRange) * this.rangeMaxWidth / this.range;
-            var startline = (this.model.startRange - this.model.min) * this.rangeMaxWidth / this.range;
-            if (this.model.vertical) {
-                this.rangeElement.style.height = `${long}px`;
-                this.rangeElement.style.top = `${this.rangeMaxWidth - long + this.model.lineHeight / 2 - startline}px`;
+    countRangeElementBandAndIndent() {
+        if (this.element.dataset.interval) {
+            var rangeBand = (this.element.dataset.endRange - this.element.dataset.startRange) * this.rangeMaxWidth / this.range;
+            var rangeIndent = (this.element.dataset.startRange - this.element.dataset.min) * this.rangeMaxWidth / this.range;
+            if (this.element.dataset.vertical) {
+                this.rangeElement.style.height = `${rangeBand}px`;
+                this.rangeElement.style.top = `${this.rangeMaxWidth - rangeBand + this.element.dataset.lineHeight / 2 - rangeIndent}px`;
             }
             else {
-                this.rangeElement.style.width = `${long}px`;
-                this.rangeElement.style.left = `${startline + this.model.lineHeight / 2}px`;
+                this.rangeElement.style.width = `${rangeBand}px`;
+                this.rangeElement.style.left = `${rangeIndent + this.element.dataset.lineHeight / 2}px`;
             }
         }
         else {
-            var long = (this.model.endRange - this.model.min) * this.rangeMaxWidth / this.range;
-            if (this.model.vertical) {
-                this.rangeElement.style.height = `${long}px`;
-                this.rangeElement.style.top = `${this.rangeMaxWidth - long + this.model.lineHeight / 2}px`;
+            var rangeBand = (this.element.dataset.endRange - this.element.dataset.min) * this.rangeMaxWidth / this.range;
+            if (this.element.dataset.vertical) {
+                this.rangeElement.style.height = `${rangeBand}px`;
+                this.rangeElement.style.top = `${this.rangeMaxWidth - rangeBand + this.element.dataset.lineHeight / 2}px`;
             }
             else {
-                this.rangeElement.style.width = `${long}px`;
-                this.rangeElement.style.left = `${this.model.lineHeight / 2}px`;
+                this.rangeElement.style.width = `${rangeBand}px`;
+                this.rangeElement.style.left = `${this.element.dataset.lineHeight / 2}px`;
             }
         }
     }
     
     @bind
     countPointRangeElement() {
-        if (this.model.vertical) {
-            this.pointRange.style.width = `${this.model.lineHeight}px`;
-            var height = +this.rangeElement.offsetHeight + +this.model.lineHeight;
+        if (this.element.dataset.vertical) {
+            this.pointRange.style.width = `${this.element.dataset.lineHeight}px`;
+            var height = +this.rangeElement.offsetHeight + +this.element.dataset.lineHeight;
             this.pointRange.style.height = `${height}px`;
-            this.pointRange.style.top = `${-this.model.lineHeight / 2}px`;
+            this.pointRange.style.top = `${-this.element.dataset.lineHeight / 2}px`;
         }
         else {
-            this.pointRange.style.height = `${this.model.lineHeight}px`;
-            this.pointRange.style.width = `${+this.rangeElement.offsetWidth + +this.model.lineHeight}px`;
-            this.pointRange.style.left = `${-this.model.lineHeight / 2}px`;
+            this.pointRange.style.height = `${this.element.dataset.lineHeight}px`;
+            this.pointRange.style.width = `${+this.rangeElement.offsetWidth + +this.element.dataset.lineHeight}px`;
+            this.pointRange.style.left = `${-this.element.dataset.lineHeight / 2}px`;
         }
     }
 
@@ -242,72 +250,72 @@ export default class View extends EventObserver {
     drawStartPoint() {
         this.startPointElement = document.createElement("div");
         this.startPointElement.className = "sliderm3__point";
-        this.startPointElement.style.height = this.startPointElement.style.width = `${this.model.pointSize}px`;
+        this.startPointElement.style.height = this.startPointElement.style.width = `${this.element.dataset.pointSize}px`;
         this.countStartPointElementTop();
         this.countStartPointElementLeft();
-        this.startPointElement.style.backgroundColor = this.model.colorPoint;
+        this.startPointElement.style.backgroundColor = this.element.dataset.colorPoint;
         this.lineElement.appendChild(this.startPointElement);
-        if (this.model.hint) this.startHintArrow = this.drawHint(this.startPointElement, this.model.startRange);
+        if (this.element.dataset.hint) this.startHintArrow = this.drawHint(this.startPointElement, this.element.dataset.startRange);
     };
     
     @bind
     countStartPointElementTop() {
-        if (this.model.vertical)
-            this.startPointElement.style.top = `${this.rangeElement.offsetTop + this.rangeElement.offsetHeight - this.model.pointSize / 2}px`;
+        if (this.element.dataset.vertical)
+            this.startPointElement.style.top = `${this.rangeElement.offsetTop + this.rangeElement.offsetHeight - this.element.dataset.pointSize / 2}px`;
         else
-            this.startPointElement.style.top = `${this.lineElement.offsetHeight / 2 - this.model.pointSize / 2}px`;
+            this.startPointElement.style.top = `${this.lineElement.offsetHeight / 2 - this.element.dataset.pointSize / 2}px`;
     }
     
     @bind
     countStartPointElementLeft() {
-        if (this.model.vertical)
-            this.startPointElement.style.left = `${this.model.lineHeight / 2 - this.model.pointSize / 2}px`;
+        if (this.element.dataset.vertical)
+            this.startPointElement.style.left = `${this.element.dataset.lineHeight / 2 - this.element.dataset.pointSize / 2}px`;
         else
-            this.startPointElement.style.left = `${this.rangeElement.offsetLeft - this.model.pointSize / 2}px`;
+            this.startPointElement.style.left = `${this.rangeElement.offsetLeft - this.element.dataset.pointSize / 2}px`;
     }
 
     @bind
     drawEndPoint() {
         this.endPointElement = document.createElement("div");
         this.endPointElement.className = "sliderm3__point";
-        this.endPointElement.style.height = this.endPointElement.style.width = `${this.model.pointSize}px`;
+        this.endPointElement.style.height = this.endPointElement.style.width = `${this.element.dataset.pointSize}px`;
         this.countEndPointElementTop();
         this.countEndPointElementLeft();
-        this.endPointElement.style.backgroundColor = this.model.colorPoint;
+        this.endPointElement.style.backgroundColor = this.element.dataset.colorPoint;
         this.lineElement.appendChild(this.endPointElement);
-        if (this.model.hint) this.endHintArrow = this.drawHint(this.endPointElement, this.model.endRange);
+        if (this.element.dataset.hint) this.endHintArrow = this.drawHint(this.endPointElement, this.element.dataset.endRange);
     };
 
     @bind
     countEndPointElementTop() {
-        if (this.model.vertical)
-            this.endPointElement.style.top = `${this.rangeElement.offsetTop - this.model.pointSize/2}px`;
+        if (this.element.dataset.vertical)
+            this.endPointElement.style.top = `${this.rangeElement.offsetTop - this.element.dataset.pointSize/2}px`;
         else 
-            this.endPointElement.style.top = `${this.lineElement.offsetHeight/2 - this.model.pointSize/2}px`;
+            this.endPointElement.style.top = `${this.lineElement.offsetHeight/2 - this.element.dataset.pointSize/2}px`;
     };
 
     @bind
     countEndPointElementLeft() {
-        if (this.model.vertical)
-            this.endPointElement.style.left = `${this.model.lineHeight / 2 - this.model.pointSize / 2}px`;
+        if (this.element.dataset.vertical)
+            this.endPointElement.style.left = `${this.element.dataset.lineHeight / 2 - this.element.dataset.pointSize / 2}px`;
         else
-            this.endPointElement.style.left = `${this.rangeElement.offsetLeft + this.rangeElement.offsetWidth - this.model.pointSize / 2}px`;
+            this.endPointElement.style.left = `${this.rangeElement.offsetLeft + this.rangeElement.offsetWidth - this.element.dataset.pointSize / 2}px`;
     }
 
     @bind
     drawHint(div, value) {
         var hintElement = document.createElement("div");
         hintElement.className = "sliderm3__hint";
-        hintElement.style.height = `${this.model.pointSize}px`;
-        hintElement.style.fontSize = `${this.model.pointSize * 4 / 6}px`;
-        hintElement.style.color = this.model.colorText;
+        hintElement.style.height = `${this.element.dataset.pointSize}px`;
+        hintElement.style.fontSize = `${this.element.dataset.pointSize * 4 / 6}px`;
+        hintElement.style.color = this.element.dataset.colorText;
         hintElement.innerHTML = Math.round(value * 100) / 100;
         div.appendChild(hintElement);
         
         var arrowElement = document.createElement("div");
         arrowElement.className = "sliderm3__arrow";  
-        arrowElement.style.height = `${this.model.pointSize/3}px`;
-        arrowElement.style.width = `${this.model.pointSize/3}px`;
+        arrowElement.style.height = `${this.element.dataset.pointSize/3}px`;
+        arrowElement.style.width = `${this.element.dataset.pointSize/3}px`;
         hintElement.appendChild(arrowElement);
 
         this.setHintPosition(hintElement, arrowElement);
@@ -316,15 +324,15 @@ export default class View extends EventObserver {
 
     @bind
     setHintPosition(hintElement, arrowElement) {
-        if (this.model.vertical) {
-            hintElement.style.left = `${-this.model.pointSize / 2 - hintElement.offsetWidth}px`;
-            hintElement.style.top = `${this.model.pointSize / 2 - hintElement.offsetHeight / 2}px`;
+        if (this.element.dataset.vertical) {
+            hintElement.style.left = `${-this.element.dataset.pointSize / 2 - hintElement.offsetWidth}px`;
+            hintElement.style.top = `${this.element.dataset.pointSize / 2 - hintElement.offsetHeight / 2}px`;
             arrowElement.style.top = `${hintElement.offsetHeight / 2 - arrowElement.offsetHeight / 2}px`;
             arrowElement.style.left = `${hintElement.offsetWidth - arrowElement.offsetWidth / 2 - 1}px`;
         }
         else {
-            hintElement.style.top = `${-this.model.pointSize / 2 - hintElement.offsetHeight}px`;
-            hintElement.style.left = `${this.model.pointSize / 2 - hintElement.offsetWidth / 2}px`;
+            hintElement.style.top = `${-this.element.dataset.pointSize / 2 - hintElement.offsetHeight}px`;
+            hintElement.style.left = `${this.element.dataset.pointSize / 2 - hintElement.offsetWidth / 2}px`;
             arrowElement.style.top = `${hintElement.offsetHeight - arrowElement.offsetHeight / 2 - 1}px`;
             arrowElement.style.left = `${hintElement.offsetWidth / 2 - arrowElement.offsetWidth / 2}px`;
         }
