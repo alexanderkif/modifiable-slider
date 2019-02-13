@@ -26,5 +26,7 @@ export default class Config {
         if (!dataset.colorPoint) dataset.colorPoint = "rgba(231, 87, 53, 1)";
         if (!dataset.colorScale) dataset.colorScale = "rgba(231, 87, 53, 1)";
         if (!dataset.colorText) dataset.colorText = "rgba(255, 255, 255, 0.8";
+
+        return dataset;
     }
 }

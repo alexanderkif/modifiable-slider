@@ -10,8 +10,8 @@ export default class Model extends EventObserver {
 
     @bind
     setModel(model) {
-        new Config(model);
-        Object.assign(this, model);
+        let normalizedModel = new Config(model);
+        Object.assign(this, normalizedModel);
         this.broadcastModelChanged('changedSlider');
     }
 

@@ -8,8 +8,8 @@ export default class Slider {
     constructor(sliderClass) {
         [].forEach.call(document.getElementsByClassName(sliderClass), element => {
             element.classList.add("sliderm3");
-            new Config(element.dataset);
-            var model = new Model(element.dataset);
+            let normalizedModel = new Config(element.dataset);
+            var model = new Model(normalizedModel);
             var view = new View(element);
             new Controller(model, view);
         });        
