@@ -15,12 +15,6 @@ export default class View extends EventObserver {
         document.addEventListener('mouseup', this.cancelMove);
         this.activePoint = "no";
         window.addEventListener('resize', this.resizeThrottler);
-        this.element.addEventListener('refreshModel', this.refreshModel);
-    }
-    
-    @bind
-    refreshModel() {
-        this.broadcast({refreshModel: this.element.dataset});
     }
     
     @bind

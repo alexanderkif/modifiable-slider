@@ -5,7 +5,6 @@ export default class Controller {
         this.model = model;
         this.view = view;
         this.view.subscribe(data => {
-            if (data.refreshModel) this.model.setModel(data.refreshModel);
             if (data.setStartRange) this.model.setStartRange(data.setStartRange.startRange);
             if (data.setEndRange) this.model.setEndRange(data.setEndRange.endRange);
         });

@@ -1,6 +1,7 @@
 import { bind } from 'decko';
 import "./constructor.scss";
 import "../tick/tick.scss";
+import Slider from "../../src/Slider";
 
 var dataJson = require('../data.json');
 
@@ -12,7 +13,9 @@ class PageContent {
         this.inputTickScale = this.pageInput.querySelector('.tick-scale');
         this.inputTickInterval = this.pageInput.querySelector('.tick-interval');	
         this.inputTickVertical = this.pageInput.querySelector('.tick-vertical');	
-        this.inputSlidermLength = this.pageInput.querySelector('.sliderm-length');	
+        this.inputSlidermLength = this.pageInput.querySelector('.sliderm-length');
+        this.inputSlidermLineHeight = this.pageInput.querySelector('.sliderm-line-height');
+        this.inputSlidermPointSize = this.pageInput.querySelector('.sliderm-point-size');
         this.inputEndRange = this.pageInput.querySelector('.sliderm-end-range');	
         this.inputStartRange = this.pageInput.querySelector('.sliderm-start-range');	
         this.inputSlidermMin = this.pageInput.querySelector('.sliderm-min');	
@@ -68,21 +71,20 @@ class PageContent {
     @bind
     change() {
         this.setInputs();
-        this.inputSlidermResult.innerHTML = `${this.div.outerHTML.split('>')[0]}></div><script src=".js"></script>`;
-        this.div.dispatchEvent(new Event('refreshModel'));		
+        this.inputSlidermResult.innerHTML = `${this.div.outerHTML.split('>')[0]}></div>`;
     }
 
     @bind
     inputsChange() {
-        this.getInputs();
-        this.div.dispatchEvent(new Event('refreshModel'));	
+        this.getInputs();	
+        this.refreshElement();
     }
 
     @bind
     inputsClick() {
         this.getInputs();
         this.setInputs();		
-        this.div.dispatchEvent(new Event('refreshModel'));
+        this.refreshElement();
     }
 
     @bind
@@ -92,8 +94,8 @@ class PageContent {
         this.div.dataset.colorPoint = this.chooseColor2color(this.chooseColorPoint);	
         this.div.dataset.colorScale = this.chooseColor2color(this.chooseColorScale);	
         this.div.dataset.colorText = this.chooseColor2color(this.chooseColorText);
-        this.div.dispatchEvent(new Event('refreshModel'));	
-        this.inputSlidermResult.innerHTML = `${this.div.outerHTML.split('>')[0]}></div><script src=".js"></script>`;
+        this.refreshElement();
+        this.inputSlidermResult.innerHTML = `${this.div.outerHTML.split('>')[0]}></div>`;
     };	
 
     @bind
@@ -116,14 +118,16 @@ class PageContent {
         this.div.dataset.scale = this.inputTickScale.classList.contains('true')?'true':'';	
         this.div.dataset.interval = this.inputTickInterval.classList.contains('true')?'true':'';	
         this.div.dataset.vertical = this.inputTickVertical.classList.contains('true')?'true':'';	
-        this.div.dataset.length = this.inputSlidermLength.value || "100%";	
+        this.div.dataset.length = this.inputSlidermLength.value || "100%";
+        this.div.dataset.lineHeight = this.inputSlidermLineHeight.value || 10;
+        this.div.dataset.pointSize = this.inputSlidermPointSize.value || 20;
         this.div.dataset.endRange = this.inputEndRange.value;	
         if (this.inputStartRange.value) this.div.dataset.startRange = this.inputStartRange.value;	
         this.div.dataset.min = this.inputSlidermMin.value;	
         this.div.dataset.max = this.inputSlidermMax.value;	
         this.div.dataset.step = this.inputSlidermStep.value;	
         this.div.dataset.intervals = this.inputSlidermIntervals.value;
-        this.inputSlidermResult.innerHTML = `${this.div.outerHTML.split('>')[0]}></div><script src=".js"></script>`;
+        this.inputSlidermResult.innerHTML = `${this.div.outerHTML.split('>')[0]}></div>`;
     };
 
     @bind
@@ -136,12 +140,26 @@ class PageContent {
         this.inputSlidermMax.value = this.div.dataset.max;	
         this.inputSlidermStep.value = this.div.dataset.step;	
         this.inputSlidermIntervals.value = this.div.dataset.intervals;	
-        this.inputSlidermLength.value = this.div.dataset.length;	
+        this.inputSlidermLength.value = this.div.dataset.length;
+        this.inputSlidermLineHeight.value = this.div.dataset.lineHeight;
+        this.inputSlidermPointSize.value = this.div.dataset.pointSize;	
         if (this.div.dataset.hint) $(this.inputTickHint).addClass('true');	
         if (this.div.dataset.scale) $(this.inputTickScale).addClass('true');	
         if (this.div.dataset.interval) $(this.inputTickInterval).addClass('true');
-        if (this.div.dataset.vertical) $(this.inputTickVertical).addClass('true');	
+        if (this.div.dataset.vertical) $(this.inputTickVertical).addClass('true');
     };
+
+    @bind
+    refreshElement() {
+        var newElem = document.createElement("div");
+        newElem.className = this.div.className;
+        Object.assign(newElem.dataset, this.div.dataset);
+        var parentPageSlider = this.div.closest('.page__slider');
+        parentPageSlider.replaceChild(newElem, this.div);
+        this.div = newElem;
+        new Slider(newElem);
+        $(this.div).on('mousedown', this.sliderMouseDown);
+    }
 }
 
 $('.page__content').each((index,element) => new PageContent(element));
