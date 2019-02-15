@@ -31,6 +31,7 @@ class PageContent {
         this.chooseColors = this.chooseColorLine.closest('.chooseColor');
 
         this.setInputs();
+        $(this.inputSlidermResult).on('click', this.copyResult);
 
         $(this.pageInput).on('change', this.inputsChange);	
         $(this.pageInput).on('click', this.inputsClick);
@@ -160,6 +161,12 @@ class PageContent {
         new Slider(newElem);
         $(this.div).on('mousedown', this.sliderMouseDown);
     }
+
+    copyResult() {
+        this.select();
+        document.execCommand("copy");
+        alert("Copied the text: " + this.value);
+      }
 }
 
 $('.page__content').each((index,element) => new PageContent(element));
