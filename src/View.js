@@ -222,26 +222,39 @@ export default class View extends EventObserver {
     countRangeElementBandAndIndent() {
         if (this.element.dataset.interval) {
             var rangeBand = (this.element.dataset.endRange - this.element.dataset.startRange) * this.rangeMaxWidth / this.range;
-            var rangeIndent = (this.element.dataset.startRange - this.element.dataset.min) * this.rangeMaxWidth / this.range;
-            if (this.element.dataset.vertical) {
-                this.rangeElement.style.height = `${rangeBand}px`;
-                this.rangeElement.style.top = `${this.rangeMaxWidth - rangeBand + this.element.dataset.lineHeight / 2 - rangeIndent}px`;
-            }
-            else {
-                this.rangeElement.style.width = `${rangeBand}px`;
-                this.rangeElement.style.left = `${rangeIndent + this.element.dataset.lineHeight / 2}px`;
-            }
         }
         else {
             var rangeBand = (this.element.dataset.endRange - this.element.dataset.min) * this.rangeMaxWidth / this.range;
-            if (this.element.dataset.vertical) {
-                this.rangeElement.style.height = `${rangeBand}px`;
-                this.rangeElement.style.top = `${this.rangeMaxWidth - rangeBand + this.element.dataset.lineHeight / 2}px`;
-            }
-            else {
-                this.rangeElement.style.width = `${rangeBand}px`;
-                this.rangeElement.style.left = `${this.element.dataset.lineHeight / 2}px`;
-            }
+        }
+        
+        var rangeIndent = (this.element.dataset.startRange - this.element.dataset.min) * this.rangeMaxWidth / this.range;
+
+        if (this.element.dataset.vertical) {
+            this.setRangeElementTop(rangeBand, rangeIndent);
+            this.rangeElement.style.height = `${rangeBand}px`;
+        }
+        else {
+            this.setRangeElementLeft(rangeIndent);
+            this.rangeElement.style.width = `${rangeBand}px`;
+        }
+    }
+    
+    setRangeElementTop(rangeBand, rangeIndent) {
+        var top = this.rangeMaxWidth - rangeBand + this.element.dataset.lineHeight / 2;
+        if (this.element.dataset.interval) {
+            this.rangeElement.style.top = `${top - rangeIndent}px`;
+        }
+        else {
+            this.rangeElement.style.top = `${top}px`;
+        }
+    }
+
+    setRangeElementLeft(rangeIndent) {
+        if (this.element.dataset.interval) {
+            this.rangeElement.style.left = `${rangeIndent + this.element.dataset.lineHeight / 2}px`;
+        }
+        else {
+            this.rangeElement.style.left = `${this.element.dataset.lineHeight / 2}px`;
         }
     }
     
