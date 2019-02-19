@@ -123,7 +123,9 @@ class PageContent {
         this.div.dataset.lineHeight = this.inputSlidermLineHeight.value || 10;
         this.div.dataset.pointSize = this.inputSlidermPointSize.value || 20;
         this.div.dataset.endRange = this.inputEndRange.value;	
-        if (this.inputStartRange.value) this.div.dataset.startRange = this.inputStartRange.value;	
+        if (this.inputStartRange.value) {
+            this.div.dataset.startRange = this.inputStartRange.value;
+        }
         this.div.dataset.min = this.inputSlidermMin.value;	
         this.div.dataset.max = this.inputSlidermMax.value;	
         this.div.dataset.step = this.inputSlidermStep.value;	
@@ -133,9 +135,12 @@ class PageContent {
 
     @bind
     setInputs() {
-        if (this.div.dataset.interval) 	
-            this.inputStartRange.value = Math.round(this.div.dataset.startRange * 100) / 100;	
-        else this.inputStartRange.value = "";
+        if (this.div.dataset.interval) {
+            this.inputStartRange.value = Math.round(this.div.dataset.startRange * 100) / 100;
+        }
+        else {
+            this.inputStartRange.value = "";
+        }
         this.inputEndRange.value = Math.round(this.div.dataset.endRange * 100) / 100;	
         this.inputSlidermMin.value = this.div.dataset.min;	
         this.inputSlidermMax.value = this.div.dataset.max;	
@@ -144,10 +149,18 @@ class PageContent {
         this.inputSlidermLength.value = this.div.dataset.length;
         this.inputSlidermLineHeight.value = this.div.dataset.lineHeight;
         this.inputSlidermPointSize.value = this.div.dataset.pointSize;	
-        if (this.div.dataset.hint) $(this.inputTickHint).addClass('true');	
-        if (this.div.dataset.scale) $(this.inputTickScale).addClass('true');	
-        if (this.div.dataset.interval) $(this.inputTickInterval).addClass('true');
-        if (this.div.dataset.vertical) $(this.inputTickVertical).addClass('true');
+        if (this.div.dataset.hint) {
+            $(this.inputTickHint).addClass('true');
+        }
+        if (this.div.dataset.scale) {
+            $(this.inputTickScale).addClass('true');
+        }
+        if (this.div.dataset.interval) {
+            $(this.inputTickInterval).addClass('true');
+        }
+        if (this.div.dataset.vertical) {
+            $(this.inputTickVertical).addClass('true');
+        }
     };
 
     @bind

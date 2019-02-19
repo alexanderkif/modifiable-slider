@@ -24,10 +24,12 @@ export default class Model extends EventObserver {
 
     @bind
     checkStartRange() {
-        if (+this.startRange > +this.endRange)
+        if (+this.startRange > +this.endRange) {
             this.startRange = this.endRange;
-        if (+this.startRange < +this.min)
+        }
+        if (+this.startRange < +this.min) {
             this.startRange = this.min;
+        }
     }
 
     @bind
@@ -39,12 +41,15 @@ export default class Model extends EventObserver {
 
     @bind
     checkEndRange() {
-        if (this.interval && +this.endRange < +this.startRange)
+        if (this.interval && +this.endRange < +this.startRange) {
             this.endRange = this.startRange;
-        if (!this.interval && +this.endRange < +this.min)
+        }
+        if (!this.interval && +this.endRange < +this.min) {
             this.endRange = this.min;
-        if (+this.endRange > +this.max)
+        }
+        if (+this.endRange > +this.max) {
             this.endRange = this.max;
+        }
     }
 
     broadcastModelChanged(description) {

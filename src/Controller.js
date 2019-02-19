@@ -5,18 +5,25 @@ export default class Controller {
         this.model = model;
         this.view = view;
         this.view.subscribe(data => {
-            if (data.setStartRange) this.model.setStartRange(data.setStartRange.startRange);
-            if (data.setEndRange) this.model.setEndRange(data.setEndRange.endRange);
+            if (data.startRange) {
+                this.model.setStartRange(data.startRange);
+            }
+            if (data.endRange) {
+                this.model.setEndRange(data.endRange);
+            }
         });
         this.model.subscribe(data => {
             Object.assign(this.view.element.dataset, data.model);
             if(data.description){
-                if(data.description == 'changedStartRange')
+                if(data.description == 'changedStartRange') {
                     this.view.changeStartRange();
-                if(data.description == 'changedEndRange')
+                }
+                if(data.description == 'changedEndRange') {
                     this.view.changeEndRange();
-                if(data.description == 'changedSlider')
+                }
+                if(data.description == 'changedSlider') {
                     this.view.refreshSlider();
+                }
             }
         });
     }

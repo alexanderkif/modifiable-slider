@@ -20,20 +20,24 @@ export default class View extends EventObserver {
     @bind
     mouseDownListener(e) {
         var lessThanEndPoint = this.isEventPositionLessThenEndPoint(e);
-        if (this.element.dataset.interval && lessThanEndPoint)
+        if (this.element.dataset.interval && lessThanEndPoint) {
             this.activePoint = "startPoint";
-        else
+        }
+        else {
             this.activePoint = "endPoint";
+        }
         this.setDatasetFromEvent(e);
         document.addEventListener('mousemove', this.mouseMoveListener);
         this.broadcastChangedPoint();
     }
 
     isEventPositionLessThenEndPoint(e) {
-        if (this.element.dataset.vertical)
+        if (this.element.dataset.vertical) {
             return e.clientY > this.getCoords(this.endPointElement).top + +this.element.dataset.pointSize;
-        else
+        }
+        else {
             return e.clientX < this.getCoords(this.endPointElement).left;
+        }
     }
 
     getCoords(elem) {
@@ -45,20 +49,24 @@ export default class View extends EventObserver {
     }
 
     setDatasetFromEvent(e) {
-        if (this.activePoint == "startPoint") 
+        if (this.activePoint == "startPoint") {
             this.element.dataset.startRange = this.getNewValueFromEvent(e);
-        else
+        }
+        else {
             this.element.dataset.endRange = this.getNewValueFromEvent(e);
+        }
     }
 
     getNewValueFromEvent(e) {
         var differenceInPixels;
-        if (this.element.dataset.vertical)
+        if (this.element.dataset.vertical) {
             differenceInPixels = this.lineElement.offsetHeight - 
                 (e.clientY - this.getCoords(this.lineElement).top + +this.element.dataset.lineHeight/2);
-        else
+        }
+        else {
             differenceInPixels = e.clientX - 
-                this.getCoords(this.lineElement).left - +this.element.dataset.lineHeight/2;        
+                this.getCoords(this.lineElement).left - +this.element.dataset.lineHeight/2;
+        }
         return this.element.dataset.step * Math.round((+this.element.dataset.min + 
             differenceInPixels * this.range / this.rangeMaxWidth) / this.element.dataset.step);
     }
@@ -72,10 +80,12 @@ export default class View extends EventObserver {
     }
 
     broadcastChangedPoint() {
-        if (this.activePoint == "startPoint")
-            this.broadcast({ setStartRange: this.element.dataset});
-        if (this.activePoint == "endPoint")
-            this.broadcast({ setEndRange: this.element.dataset});
+        if (this.activePoint == "startPoint") {
+            this.broadcast({ startRange: this.element.dataset.startRange});
+        }
+        if (this.activePoint == "endPoint") {
+            this.broadcast({ endRange: this.element.dataset.endRange});
+        }
     }
 
     @bind
@@ -96,11 +106,18 @@ export default class View extends EventObserver {
     
     @bind
     refreshSlider() {
-        if (this.lineElement) this.lineElement.remove();
+        if (this.lineElement) {
+            this.lineElement.remove();
+        }
         this.drawLine();
-        if (this.element.dataset.scale) this.drawScale();
+        this.lineElement.addEventListener('mousedown', this.mouseDownListener);
+        if (this.element.dataset.scale) {
+            this.drawScale();
+        }
         this.drawRange();
-        if (this.element.dataset.interval) this.drawStartPoint();
+        if (this.element.dataset.interval) {
+            this.drawStartPoint();
+        }
         this.drawEndPoint();
     };
     
@@ -147,7 +164,6 @@ export default class View extends EventObserver {
         this.lineElement.style.borderRadius = `${this.element.dataset.lineHeight / 2}px`;
         this.lineElement.style.backgroundColor = this.element.dataset.colorLine;
         this.element.appendChild(this.lineElement); 
-        this.lineElement.addEventListener('mousedown', this.mouseDownListener);
     };
     
     @bind
@@ -182,8 +198,12 @@ export default class View extends EventObserver {
     
     @bind
     drawRange() {
-        if (this.element.dataset.vertical) this.rangeMaxWidth = this.lineElement.offsetHeight - this.element.dataset.lineHeight;
-        else this.rangeMaxWidth = this.lineElement.offsetWidth - this.element.dataset.lineHeight;
+        if (this.element.dataset.vertical) {
+            this.rangeMaxWidth = this.lineElement.offsetHeight - this.element.dataset.lineHeight;
+        }
+        else {
+            this.rangeMaxWidth = this.lineElement.offsetWidth - this.element.dataset.lineHeight;
+        }
         this.range = this.element.dataset.max - this.element.dataset.min;
         this.rangeElement = document.createElement("div");
         this.rangeElement.className = "sliderm3__range";
@@ -249,23 +269,29 @@ export default class View extends EventObserver {
         this.countStartPointElementLeft();
         this.startPointElement.style.backgroundColor = this.element.dataset.colorPoint;
         this.lineElement.appendChild(this.startPointElement);
-        if (this.element.dataset.hint) this.startHintArrow = this.drawHint(this.startPointElement, this.element.dataset.startRange);
+        if (this.element.dataset.hint) {
+            this.startHintArrow = this.drawHint(this.startPointElement, this.element.dataset.startRange);
+        }
     };
     
     @bind
     countStartPointElementTop() {
-        if (this.element.dataset.vertical)
+        if (this.element.dataset.vertical) {
             this.startPointElement.style.top = `${this.rangeElement.offsetTop + this.rangeElement.offsetHeight - this.element.dataset.pointSize / 2}px`;
-        else
+        }
+        else {
             this.startPointElement.style.top = `${this.lineElement.offsetHeight / 2 - this.element.dataset.pointSize / 2}px`;
+        }
     }
     
     @bind
     countStartPointElementLeft() {
-        if (this.element.dataset.vertical)
+        if (this.element.dataset.vertical) {
             this.startPointElement.style.left = `${this.element.dataset.lineHeight / 2 - this.element.dataset.pointSize / 2}px`;
-        else
+        }
+        else {
             this.startPointElement.style.left = `${this.rangeElement.offsetLeft - this.element.dataset.pointSize / 2}px`;
+        }
     }
 
     @bind
@@ -277,23 +303,29 @@ export default class View extends EventObserver {
         this.countEndPointElementLeft();
         this.endPointElement.style.backgroundColor = this.element.dataset.colorPoint;
         this.lineElement.appendChild(this.endPointElement);
-        if (this.element.dataset.hint) this.endHintArrow = this.drawHint(this.endPointElement, this.element.dataset.endRange);
+        if (this.element.dataset.hint) {
+            this.endHintArrow = this.drawHint(this.endPointElement, this.element.dataset.endRange);
+        }
     };
 
     @bind
     countEndPointElementTop() {
-        if (this.element.dataset.vertical)
+        if (this.element.dataset.vertical) {
             this.endPointElement.style.top = `${this.rangeElement.offsetTop - this.element.dataset.pointSize/2}px`;
-        else 
+        }
+        else {
             this.endPointElement.style.top = `${this.lineElement.offsetHeight/2 - this.element.dataset.pointSize/2}px`;
+        }
     };
 
     @bind
     countEndPointElementLeft() {
-        if (this.element.dataset.vertical)
+        if (this.element.dataset.vertical) {
             this.endPointElement.style.left = `${this.element.dataset.lineHeight / 2 - this.element.dataset.pointSize / 2}px`;
-        else
+        }
+        else {
             this.endPointElement.style.left = `${this.rangeElement.offsetLeft + this.rangeElement.offsetWidth - this.element.dataset.pointSize / 2}px`;
+        }
     }
 
     @bind
