@@ -13,3 +13,11 @@ export default class Slider {
         new Controller(model, view);
     }
 }
+
+(function($){
+    $.fn.modSlider = function(){
+        return this.each(function(){
+            new Slider(this);
+        }) 
+    }
+})(jQuery);
