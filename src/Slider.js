@@ -14,50 +14,30 @@ export default class Slider {
 
 (function($){
     $.fn.modSlider = function(defaults){
-        return this.each(function(){
-            if (!this.dataset.min) {
-                this.dataset.min = defaults.min;
+       
+        var countDefaults = function(dataset){
+            let template = {};
+            Object.assign(template, defaults);
+            let data = $.extend(template, dataset);
+            if (!data.max) {
+                data.max = +data.min + 100;
             }
-            if (!this.dataset.max) {
-                this.dataset.max = +this.dataset.min + 100;
+            if (!data.endRange){
+                data.endRange = (+data.max - +data.min)/2 + +data.min;
             }
-            if (!this.dataset.endRange){
-                this.dataset.endRange = (+this.dataset.max - +this.dataset.min)/2 + +this.dataset.min;
+            if (!data.startRange) {
+                data.startRange = +data.min;
             }
-            if (!this.dataset.startRange) {
-                this.dataset.startRange = +this.dataset.min;
-            }
-            if (!this.dataset.step) {
-                this.dataset.step = defaults.step; 
-            }
-            if (!this.dataset.intervals) {
-                this.dataset.intervals = defaults.intervals; 
-            }
-            if (!this.dataset.length) {
-                this.dataset.length = defaults.length; 
-            }
-            if (!this.dataset.lineHeight) {
-                this.dataset.lineHeight = defaults.lineHeight;
-            }
-            if (!this.dataset.pointSize) {
-                this.dataset.pointSize = defaults.pointSize;
-            }
-            if (!this.dataset.colorLine) {
-                this.dataset.colorLine = defaults.colorLine;
-            }
-            if (!this.dataset.colorRange) {
-                this.dataset.colorRange = defaults.colorRange;
-            }
-            if (!this.dataset.colorPoint) {
-                this.dataset.colorPoint = defaults.colorPoint;
-            }
-            if (!this.dataset.colorScale) {
-                this.dataset.colorScale = defaults.colorScale;
-            }
-            if (!this.dataset.colorText) {
-                this.dataset.colorText = defaults.colorText;
-            }
+            for (var key in data) {
+                dataset[key] = data[key];
+            }            
+        };
+
+        var makeSlider = function(){
+            countDefaults(this.dataset);
             new Slider(this);
-        }) 
+        }
+
+        return this.each(makeSlider);
     }
 })(jQuery);
