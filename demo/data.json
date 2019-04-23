@@ -1,5 +1,18 @@
 {
     "sliderClass" : "my-awesome-slider-1234",
+    "defaults" : {
+        "min" : 0, 
+        "step" : 1, 
+        "intervals" : 3, 
+        "length" : 300, 
+        "lineHeight" : 25, 
+        "pointSize" : 50, 
+        "colorLine" : "rgba(230, 230, 230, 1)", 
+        "colorRange" : "rgba(231, 87, 53, 1)", 
+        "colorPoint" : "rgba(231, 87, 53, 1)", 
+        "colorScale" : "rgba(231, 87, 53, 1)", 
+        "colorText" : "rgba(255, 255, 255, 0.8)"
+    },
     "sliders" : [
         {
             "min" : 20, 

@@ -1,6 +1,5 @@
 import { bind } from 'decko';
 import EventObserver from './EventObserver';
-import Config from './Config';
 
 export default class Model extends EventObserver {
     constructor(model) {
@@ -8,9 +7,28 @@ export default class Model extends EventObserver {
         this.setModel(model);
     }
 
+    normalizeModel(model) {
+        if (+model.max < +model.min) {
+            model.max = +model.min + 100;
+        }
+        if (+model.endRange > +model.max) {
+            model.endRange = +model.max;
+        }
+        if (+model.endRange < +model.min) {
+            model.endRange = +model.min;
+        }
+        if (+model.startRange < +model.min) {
+            model.startRange = +model.min;
+        }
+        if (+model.startRange > +model.endRange){
+            model.startRange = +model.endRange;
+        }
+        return model;
+    }
+
     @bind
     setModel(model) {
-        let normalizedModel = new Config(model);
+        let normalizedModel = this.normalizeModel(model);
         Object.assign(this, normalizedModel);
         this.broadcastModelChanged('changedSlider');
     }
