@@ -3,6 +3,8 @@ import Model from './Model';
 import View from './View';
 import Controller from './Controller';
 
+var dataJson = require('../demo/data.json');
+
 export default class Slider {
     constructor(element) {
         element.classList.add("sliderm3");
@@ -13,28 +15,18 @@ export default class Slider {
 }
 
 (function($){
-    $.fn.modSlider = function(defaults){
-       
-        var countDefaults = function(dataset){
+    $.fn.modSlider = function(){
+        var setDefaults = function(dataset){
             let template = {};
-            Object.assign(template, defaults);
+            Object.assign(template, dataJson.defaults);
             let data = $.extend(template, dataset);
-            if (!data.max) {
-                data.max = +data.min + 100;
-            }
-            if (!data.endRange){
-                data.endRange = (+data.max - +data.min)/2 + +data.min;
-            }
-            if (!data.startRange) {
-                data.startRange = +data.min;
-            }
             for (var key in data) {
                 dataset[key] = data[key];
             }            
         };
 
         var makeSlider = function(){
-            countDefaults(this.dataset);
+            setDefaults(this.dataset);
             new Slider(this);
         }
 

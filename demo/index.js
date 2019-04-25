@@ -5,4 +5,4 @@ import "./constructor/constructor";
 
 var dataJson = require('./data.json');
 
-$(`.${dataJson.sliderClass}`).modSlider(dataJson.defaults);
+$(`.${dataJson.sliderClass}`).modSlider();

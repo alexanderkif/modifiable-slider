@@ -8,9 +8,15 @@ export default class Model extends EventObserver {
     }
 
     normalizeModel(model) {
-        if (+model.max < +model.min) {
+        if (!model.max || +model.max < +model.min) {
             model.max = +model.min + 100;
         }
+        if (!model.endRange){
+            model.endRange = (+model.max - +model.min)/2 + +model.min;
+        }
+        if (!model.startRange) {
+            model.startRange = +model.min;
+        }            
         if (+model.endRange > +model.max) {
             model.endRange = +model.max;
         }
