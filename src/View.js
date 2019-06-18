@@ -115,6 +115,7 @@ export default class View extends EventObserver {
             this.drawScale();
         }
         this.drawRange();
+        this.changeRange();
         if (this.element.dataset.interval) {
             this.drawStartPoint();
         }
@@ -207,12 +208,10 @@ export default class View extends EventObserver {
         this.range = this.element.dataset.max - this.element.dataset.min;
         this.rangeElement = document.createElement("div");
         this.rangeElement.className = "sliderm3__range";
-        this.countRangeElementBandAndIndent();
         this.lineElement.appendChild(this.rangeElement);
 
         this.pointRange = document.createElement("div");
         this.pointRange.className = "sliderm3__point-range";
-        this.countPointRangeElement();
         this.pointRange.style.borderRadius = `${this.element.dataset.lineHeight/2}px`;
         this.pointRange.style.backgroundColor = this.element.dataset.colorRange;
         this.rangeElement.appendChild(this.pointRange);
