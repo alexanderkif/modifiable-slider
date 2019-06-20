@@ -8,9 +8,9 @@ var dataJson = require('../demo/data.json');
 export default class Slider {
     constructor(element) {
         element.classList.add("sliderm3");
-        var model = new Model(element.dataset);
-        var view = new View(element);
-        new Controller(model, view);
+        this.model = new Model(element.dataset);
+        this.view = new View(element);
+        new Controller(this.model, this.view);
     }
 }
 
@@ -27,7 +27,14 @@ export default class Slider {
 
         var makeSlider = function(){
             setDefaults(this.dataset);
-            new Slider(this);
+            let slider = new Slider(this);
+            slider.model.subscribe(data => {
+                $(this).trigger({
+                    type: 'slider.stateChange',
+                    start: data.model.interval == 'true' ? data.model.startRange : data.model.min,
+                    end: data.model.endRange
+                });
+            });
         }
 
         return this.each(makeSlider);
