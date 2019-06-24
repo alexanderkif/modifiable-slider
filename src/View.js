@@ -3,6 +3,7 @@ import { bind } from 'decko';
 import EventObserver from './EventObserver';
 const THROTTLE_THRESHOLD = 50;
 const MIN_DISTANCE_SLIDER_SCALE = 5;
+const K_SCALE_FONT_SIZE = 0.5;
 
 export default class View extends EventObserver {
     constructor(element) {
@@ -172,7 +173,7 @@ export default class View extends EventObserver {
         this.scaleElement = document.createElement("ul");
         this.scaleElement.className = "sliderm3__scale";
         let dataset = this.element.dataset;
-        this.scaleElement.style.fontSize = `${dataset.pointSize * 3 / 6}px`;
+        this.scaleElement.style.fontSize = `${dataset.pointSize * K_SCALE_FONT_SIZE}px`;
         this.scaleElement.style.color = dataset.colorScale;
         this.lineElement.appendChild(this.scaleElement);
         if (dataset.vertical) {
